@@ -1,6 +1,7 @@
 namespace cowsins
 {
     using UnityEngine;
+    
     public class WeaponInspectState : WeaponBaseState
     {
         private WeaponController controller;
@@ -9,14 +10,31 @@ namespace cowsins
 
         private PlayerStats stats;
 
+        [SerializeField] private EventManager eventManager;
+
         PlayerMovement player;
 
         private float timer;
         public WeaponInspectState(WeaponStates currentContext, WeaponStateFactory playerStateFactory)
             : base(currentContext, playerStateFactory) { }
 
+        private void AssignEventManager()
+        {
+            if (eventManager == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
+
+                if (playerObject != null)
+                {
+                    eventManager = playerObject.GetComponent<EventManager>();
+                }
+            }
+        }
+
         public override void EnterState()
         {
+            AssignEventManager();
+            
             player = _ctx.GetComponent<PlayerMovement>();
             controller = _ctx.GetComponent<WeaponController>();
             interact = _ctx.GetComponent<InteractManager>();
@@ -61,7 +79,7 @@ namespace cowsins
 
             LockMouse();
 
-            UIEvents.onEnableAttachmentUI?.Invoke(null);
+            eventManager.OnEnableAttachmentUI?.Invoke(null);
         }
         public override void CheckSwitchState()
         {

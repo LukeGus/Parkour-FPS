@@ -15,11 +15,37 @@ namespace cowsins
 
         [SerializeField] private bool directionDependsOnPlayerPosition;
 
+        [SerializeField] private EventManager eventManager;
+
         private Animation anim;
 
         private AudioSource audioSource;
 
         private string baseInteractText;
+
+        private void Update()
+        {
+            if (eventManager == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
+
+                if (playerObject != null)
+                {
+                    eventManager = playerObject.GetComponent<EventManager>();
+                }
+            }
+            
+            if (weaponController == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
+
+                if (playerObject != null)
+                {
+                    weaponController = playerObject.GetComponentInChildren<WeaponController>();
+                }
+            }
+        }
+        
         private void Start()
         {
             anim = GetComponent<Animation>();
@@ -48,7 +74,7 @@ namespace cowsins
             if (price != 0)
             {
                 CoinManager.Instance.RemoveCoins(price);
-                UIEvents.onCoinsChange?.Invoke(CoinManager.Instance.coins);
+                eventManager.OnCoinsChange?.Invoke(CoinManager.Instance.coins);
             }
             yield return new WaitForSeconds(delayToReceiveLoot);
             GameObject lootObject = null;

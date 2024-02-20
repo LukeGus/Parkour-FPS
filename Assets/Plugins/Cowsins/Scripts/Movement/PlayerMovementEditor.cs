@@ -1,6 +1,6 @@
 #if UNITY_EDITOR
 /// <summary>
-/// This script belongs to cowsins™ as a part of the cowsins´ FPS Engine. All rights reserved. 
+/// This script belongs to cowsinsï¿½ as a part of the cowsinsï¿½ FPS Engine. All rights reserved. 
 /// </summary>
 
 
@@ -39,6 +39,7 @@ namespace cowsins
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("playerCam"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("orientation"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("useSpeedLines"));
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("eventManager"));
                         if (myScript.useSpeedLines)
                         {
                             EditorGUI.indentLevel++;
@@ -169,7 +170,7 @@ namespace cowsins
                                 EditorGUI.indentLevel--;
                             }
                             EditorGUILayout.PropertyField(serializedObject.FindProperty("jumpCooldown"));
-                            if (myScript.coyoteJumpTime == 0) EditorGUILayout.LabelField("Coyote Jump won´t be applied since the value is equal to 0", EditorStyles.helpBox);
+                            if (myScript.coyoteJumpTime == 0) EditorGUILayout.LabelField("Coyote Jump wonï¿½t be applied since the value is equal to 0", EditorStyles.helpBox);
                             EditorGUILayout.PropertyField(serializedObject.FindProperty("coyoteJumpTime"));
                             EditorGUI.indentLevel--;
                         }
@@ -214,7 +215,7 @@ namespace cowsins
                         if (myScript.canWallRun)
                         {
                             EditorGUI.indentLevel++;
-                            EditorGUILayout.LabelField("NEW FEATURE AVAILABLE UNDER ´CAMERA´ SETTINGS", EditorStyles.helpBox);
+                            EditorGUILayout.LabelField("NEW FEATURE AVAILABLE UNDER ï¿½CAMERAï¿½ SETTINGS", EditorStyles.helpBox);
                             EditorGUILayout.PropertyField(serializedObject.FindProperty("whatIsWallRunWall"));
                             EditorGUILayout.PropertyField(serializedObject.FindProperty("useGravity"));
                             if (myScript.useGravity)
@@ -258,7 +259,7 @@ namespace cowsins
                         EditorGUILayout.Space(20);
                         EditorGUILayout.LabelField("DASHING");
                         GUILayout.Box("", new GUILayoutOption[] { GUILayout.ExpandWidth(true), GUILayout.Height(8) });
-                        if (myScript.canDash && !myScript.infiniteDashes) EditorGUILayout.LabelField("NEW FEATURE AVAILABLE UNDER ´ASSIGNABLES´ SETTINGS", EditorStyles.helpBox);
+                        if (myScript.canDash && !myScript.infiniteDashes) EditorGUILayout.LabelField("NEW FEATURE AVAILABLE UNDER ï¿½ASSIGNABLESï¿½ SETTINGS", EditorStyles.helpBox);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("canDash"));
                         if (myScript.canDash)
                         {

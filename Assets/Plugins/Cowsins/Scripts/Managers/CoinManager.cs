@@ -5,6 +5,8 @@ namespace cowsins
     public class CoinManager : MonoBehaviour
     {
         public static CoinManager Instance; // Singleton instance of the CoinManager
+        
+        [SerializeField] private EventManager eventManager; // Reference to the event manager
 
         [Tooltip("Whether the game should use coins.")]
         public bool useCoins; // Flag to indicate if the game uses coins
@@ -25,7 +27,7 @@ namespace cowsins
 
         private void Start()
         {
-            UIEvents.onCoinsChange?.Invoke(coins);
+            eventManager.OnCoinsChange?.Invoke(coins);
         }
 
         // Add coins to the total count

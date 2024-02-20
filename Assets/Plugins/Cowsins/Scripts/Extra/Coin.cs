@@ -4,8 +4,23 @@ namespace cowsins
 {
     public class Coin : MonoBehaviour
     {
+        [SerializeField] private EventManager eventManager;
+        
         [SerializeField] private int minCoins, maxCoins;
         [SerializeField] private UIController uiController;
+
+        private void Update()
+        {
+            if (eventManager == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
+
+                if (playerObject != null)
+                {
+                    eventManager = playerObject.GetComponent<EventManager>();
+                }
+            }
+        }
 
         [SerializeField] private AudioClip collectCoinSFX;
         private void OnTriggerEnter(Collider other)
@@ -14,7 +29,7 @@ namespace cowsins
             int amountOfCoins = Random.Range(minCoins, maxCoins);
             CoinManager.Instance.AddCoins(amountOfCoins);
             uiController.UpdateCoinsPanel();
-            UIEvents.onCoinsChange?.Invoke(CoinManager.Instance.coins);
+            eventManager.OnCoinsChange.Invoke(amountOfCoins);
             SoundManager.Instance.PlaySound(collectCoinSFX, 0, 1, false, 0);
             Destroy(this.gameObject);
         }

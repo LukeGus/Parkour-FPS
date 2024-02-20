@@ -1,5 +1,5 @@
 /// <summary>
-/// This script belongs to cowsins™ as a part of the cowsins´ FPS Engine. All rights reserved. 
+/// This script belongs to cowsinsï¿½ as a part of the cowsinsï¿½ FPS Engine. All rights reserved. 
 /// </summary>
 using UnityEngine;
 using UnityEngine.Events;
@@ -35,6 +35,8 @@ namespace cowsins
         private PlayerStats stats;
 
         public Events events;
+        
+        [SerializeField] private EventManager eventManager;
 
         #endregion
 
@@ -47,7 +49,7 @@ namespace cowsins
             damageMultiplier = 1;
             healMultiplier = 1;
 
-            UIEvents.basicHealthUISetUp?.Invoke(health, shield, maxHealth, maxShield);
+            eventManager.BasicHealthUISetUp?.Invoke(health, shield, maxHealth, maxShield);
 
             GrantControl();
         }
@@ -84,7 +86,7 @@ namespace cowsins
                 health -= damage;
             }
             // Effect on damage
-            UIEvents.onHealthChanged?.Invoke(health, shield, true);
+            eventManager.OnHealthChanged?.Invoke(health, shield, true);
         }
 
         public void Heal(float healAmount_)
@@ -111,7 +113,7 @@ namespace cowsins
             else health += healAmount; // If not just apply your heal
 
             // effect on heal 
-            UIEvents.onHealthChanged?.Invoke(health, shield, false);
+            eventManager.OnHealthChanged?.Invoke(health, shield, false);
         }
         /// <summary>
         /// Perform any actions On death

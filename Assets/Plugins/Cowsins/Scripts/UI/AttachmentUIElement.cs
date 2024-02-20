@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 namespace cowsins
 {
@@ -9,6 +10,13 @@ namespace cowsins
     /// </summary>
     public class AttachmentUIElement : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
+        [System.Serializable]
+        public class Events
+        {
+            public UnityEvent<Attachment, bool> OnAttachmentUIElementClicked;
+            public UnityEvent<Attachment, int> OnAttachmentUIElementClickedNewAttachment;
+        }
+        
         [SerializeField, Tooltip("Image that represents the background you want to use. This will change colour depending if the attachment is equipped or not")] private Image background;
 
         [SerializeField, Tooltip("Displays the attachment icon. The attachment Icon can be set on its Attachment Identifier SO")] private Image iconDisplay;
@@ -18,23 +26,13 @@ namespace cowsins
         [HideInInspector] public int id;
 
         [HideInInspector] public bool assigned;
+        
+        [SerializeField] private Events events;
 
         [HideInInspector] public Color assignedColor, unAssignedColor;
 
 
         private bool highlighted = false;
-
-        private void OnEnable()
-        {
-            // Subscribe to the method on clicking 
-            UIEvents.onAttachmentUIElementClickedNewAttachment += DeselectAll;
-        }
-
-        private void OnDisable()
-        {
-            // Unsubscribe to the method on clicking 
-            UIEvents.onAttachmentUIElementClickedNewAttachment -= DeselectAll;
-        }
 
         private void Update()
         {
@@ -63,13 +61,13 @@ namespace cowsins
             // If the attachment is assigned, deselect it 
             if (assigned)
             {
-                UIEvents.onAttachmentUIElementClicked?.Invoke(atc, true);
+                events.OnAttachmentUIElementClicked?.Invoke(atc, true);
                 DeselectAll(atc, id);
             }
             else
             {
                 // if its not assigned, equip it
-                UIEvents.onAttachmentUIElementClickedNewAttachment?.Invoke(atc, id);
+                events.OnAttachmentUIElementClickedNewAttachment?.Invoke(atc, id);
                 SelectAsAssigned();
             }
         }

@@ -116,6 +116,8 @@ namespace cowsins
         
         [SerializeField] private CoinManager coinManager;
 
+        [SerializeField] private EventManager eventManager;
+
 
         public delegate void AddXP();
 
@@ -172,7 +174,6 @@ namespace cowsins
         // HEALTH SYSTEM /////////////////////////////////////////////////////////////////////////////////////////
         private void UpdateHealthUI(float health, float shield, bool damaged)
         {
-
             healthDisplayMethod?.Invoke(health, shield);
 
             Color colorSelected = damaged ? damageColor : healColor;
@@ -418,53 +419,54 @@ namespace cowsins
         private void OnEnable()
         {
             addXP = UpdateXP;
-            UIEvents.onHealthChanged += UpdateHealthUI;
-            UIEvents.basicHealthUISetUp += HealthSetUp;
-            if (barHealthDisplay) healthDisplayMethod += BarHealthDisplayMethod;
-            if (numericHealthDisplay) healthDisplayMethod += NumericHealthDisplayMethod;
-            //InteractManager.Events.AllowedInteraction += AllowedInteraction;
-            //UIEvents.forbiddenInteraction += ForbiddenInteraction;
-            //UIEvents.disableInteractionUI += DisableInteractionUI;
-            //UIEvents.onInteractionProgressChanged += InteractioProgressUpdate;
-            //UIEvents.onFinishInteractionProgress += FinishInteraction;
-            UIEvents.onGenerateInspectionUI += GenerateInspectionUI;
-            UIEvents.onInitializeDashUI += DrawDashUI;
-            UIEvents.onDashGained += RegainDash;
-            UIEvents.onDashUsed += DashUsed;
-            UIEvents.onEnemyHit += Hitmarker;
-            UIEvents.onEnemyKilled += AddKillfeed;
-            UIEvents.onDetectReloadMethod += DetectReloadMethod;
-            UIEvents.onHeatRatioChanged += UpdateHeatRatio;
-            UIEvents.onBulletsChanged += UpdateBullets;
-            UIEvents.disableWeaponUI += DisableWeaponUI;
-            UIEvents.setWeaponDisplay += SetWeaponDisplay;
-            UIEvents.enableWeaponDisplay += EnableDisplay;
-            UIEvents.onCoinsChange += UpdateCoins;
+            eventManager.OnHealthChanged.AddListener(UpdateHealthUI);
+            eventManager.BasicHealthUISetUp.AddListener(HealthSetUp);
+            if (barHealthDisplay) eventManager.HealthDisplayMethod.AddListener(BarHealthDisplayMethod);
+            if (numericHealthDisplay) eventManager.HealthDisplayMethod.AddListener(NumericHealthDisplayMethod);
+            eventManager.AllowedInteraction.AddListener(AllowedInteraction);
+            eventManager.ForbiddenInteraction.AddListener(ForbiddenInteraction);
+            eventManager.DisableInteractionUI.AddListener(DisableInteractionUI);
+            eventManager.OnInteractionProgressChanged.AddListener(InteractioProgressUpdate);
+            eventManager.OnFinishInteractionProgress.AddListener(FinishInteraction);
+            eventManager.OnGenerateInspectionUI.AddListener(GenerateInspectionUI);
+            eventManager.OnInitializeDashUI.AddListener(DrawDashUI);
+            eventManager.OnDashGained.AddListener(RegainDash);
+            eventManager.OnDashUsed.AddListener(DashUsed);
+            eventManager.OnEnemyHit.AddListener(Hitmarker);
+            eventManager.OnEnemyKilled.AddListener(AddKillfeed);
+            eventManager.OnDetectReloadMethod.AddListener(DetectReloadMethod);
+            eventManager.OnHeatRatioChanged.AddListener(UpdateHeatRatio);
+            eventManager.OnBulletsChanged.AddListener(UpdateBullets);
+            eventManager.DisableWeaponUI.AddListener(DisableWeaponUI);
+            eventManager.SetWeaponDisplay.AddListener(SetWeaponDisplay);
+            eventManager.EnableWeaponDisplay.AddListener(EnableDisplay);
+            eventManager.OnCoinsChange.AddListener(UpdateCoins);
 
             interactUI.SetActive(false);
         }
         private void OnDisable()
         {
-            UIEvents.onHealthChanged = null;
-            UIEvents.basicHealthUISetUp = null;
-            healthDisplayMethod = null;
-            UIEvents.allowedInteraction = null;
-            UIEvents.forbiddenInteraction = null;
-            UIEvents.disableInteractionUI = null;
-            UIEvents.onInteractionProgressChanged = null;
-            UIEvents.onFinishInteractionProgress = null;
-            UIEvents.onGenerateInspectionUI = null;
-            UIEvents.onInitializeDashUI = null;
-            UIEvents.onDashGained = null;
-            UIEvents.onDashUsed = null;
-            UIEvents.onEnemyHit = null;
-            UIEvents.onEnemyKilled = null;
-            UIEvents.onDetectReloadMethod = null;
-            UIEvents.onHeatRatioChanged = null;
-            UIEvents.onBulletsChanged = null;
-            UIEvents.disableWeaponUI = null;
-            UIEvents.setWeaponDisplay = null;
-            UIEvents.enableWeaponDisplay = null;
+            eventManager.OnHealthChanged.RemoveListener(UpdateHealthUI);
+            eventManager.BasicHealthUISetUp.RemoveListener(HealthSetUp);
+            if (barHealthDisplay) eventManager.HealthDisplayMethod.RemoveListener(BarHealthDisplayMethod);
+            if (numericHealthDisplay) eventManager.HealthDisplayMethod.RemoveListener(NumericHealthDisplayMethod);
+            eventManager.AllowedInteraction.RemoveListener(AllowedInteraction);
+            eventManager.ForbiddenInteraction.RemoveListener(ForbiddenInteraction);
+            eventManager.DisableInteractionUI.RemoveListener(DisableInteractionUI);
+            eventManager.OnInteractionProgressChanged.RemoveListener(InteractioProgressUpdate);
+            eventManager.OnFinishInteractionProgress.RemoveListener(FinishInteraction);
+            eventManager.OnGenerateInspectionUI.RemoveListener(GenerateInspectionUI);
+            eventManager.OnInitializeDashUI.RemoveListener(DrawDashUI);
+            eventManager.OnDashGained.RemoveListener(RegainDash);
+            eventManager.OnDashUsed.RemoveListener(DashUsed);
+            eventManager.OnEnemyHit.RemoveListener(Hitmarker);
+            eventManager.OnEnemyKilled.RemoveListener(AddKillfeed);
+            eventManager.OnDetectReloadMethod.RemoveListener(DetectReloadMethod);
+            eventManager.OnHeatRatioChanged.RemoveListener(UpdateHeatRatio);
+            eventManager.OnBulletsChanged.RemoveListener(UpdateBullets);
+            eventManager.DisableWeaponUI.RemoveListener(DisableWeaponUI);
+            eventManager.SetWeaponDisplay.RemoveListener(SetWeaponDisplay);
+            eventManager.EnableWeaponDisplay.RemoveListener(EnableDisplay);
             addXP = null;
         }
 
@@ -585,6 +587,7 @@ namespace cowsins
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("playerStates"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("weaponStates"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("coinManager"));
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("eventManager"));
                         break;
                     case "UI Events":
 

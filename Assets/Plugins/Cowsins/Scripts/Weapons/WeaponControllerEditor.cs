@@ -51,6 +51,7 @@ namespace cowsins
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("cameraPivot"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("weaponHolder"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("uiController"));
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("eventManager"));
                         break;
                     case "Variables":
                         EditorGUILayout.Space(10f);

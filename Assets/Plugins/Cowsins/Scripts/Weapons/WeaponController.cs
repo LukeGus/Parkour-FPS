@@ -31,6 +31,7 @@ namespace cowsins
 {
     public class WeaponController : MonoBehaviour
     {
+        
         //References
         [Tooltip("Attach your weapon scriptable objects here.")] public Weapon_SO[] weapons;
 
@@ -145,17 +146,19 @@ namespace cowsins
 
         private AudioClip fireSFX;
 
+        [SerializeField] private EventManager eventManager;
+
         private void OnEnable()
         {
             // Subscribe to the method.
             // Each time we click on the attachment UI, we should perform the assignment.
-            UIEvents.onAttachmentUIElementClickedNewAttachment += AssignNewAttachment;
+            eventManager.OnAttachmentUIElementClickedNewAttachment.AddListener(AssignNewAttachment);
         }
 
         private void OnDisable()
         {
             // Unsubscribe from the method to avoid issues
-            UIEvents.onAttachmentUIElementClickedNewAttachment = null;
+            eventManager.OnAttachmentUIElementClickedNewAttachment.RemoveListener(AssignNewAttachment);
         }
         private void Start()
         {
@@ -727,16 +730,16 @@ namespace cowsins
             // UI & OTHERS
             if (weapon.infiniteBullets || weapon.reloadStyle == ReloadingStyle.Overheat)
             {
-                UIEvents.onDetectReloadMethod?.Invoke(false, !weapon.infiniteBullets);
+                eventManager.OnDetectReloadMethod?.Invoke(false, !weapon.infiniteBullets);
             }
             else
             {
-                UIEvents.onDetectReloadMethod?.Invoke(true, false);
+                eventManager.OnDetectReloadMethod?.Invoke(true, false);
             }
 
-            if ((int)weapon.shootStyle == 2) UIEvents.onDetectReloadMethod?.Invoke(false, false);
+            if ((int)weapon.shootStyle == 2) eventManager.OnDetectReloadMethod?.Invoke(false, false);
 
-            UIEvents.setWeaponDisplay?.Invoke(weapon);
+            eventManager.SetWeaponDisplay?.Invoke(weapon);
         }
 
         /// <summary>
@@ -873,11 +876,11 @@ namespace cowsins
             // If we dont own a weapon yet, do not continue
             if (weapon == null)
             {
-                UIEvents.disableWeaponUI?.Invoke();
+                eventManager.DisableWeaponUI?.Invoke();
                 return;
             }
 
-            UIEvents.enableWeaponDisplay?.Invoke();
+            eventManager.EnableWeaponDisplay?.Invoke();
 
             if (weapon.reloadStyle == ReloadingStyle.defaultReload)
             {
@@ -889,17 +892,17 @@ namespace cowsins
                     // Set different display settings for each shoot style 
                     if (weapon.limitedMagazines)
                     {
-                        UIEvents.onBulletsChanged?.Invoke(id.bulletsLeftInMagazine, id.totalBullets, activeReloadUI, activeLowAmmoUI);
+                        eventManager.OnBulletsChanged?.Invoke(id.bulletsLeftInMagazine, id.totalBullets, activeReloadUI, activeLowAmmoUI);
                     }
                     else
                     {
-                        UIEvents.onBulletsChanged?.Invoke(id.bulletsLeftInMagazine, id.magazineSize, activeReloadUI, activeLowAmmoUI);
+                        eventManager.OnBulletsChanged?.Invoke(id.bulletsLeftInMagazine, id.magazineSize, activeReloadUI, activeLowAmmoUI);
                     }
                 }
             }
             else
             {
-                UIEvents.onHeatRatioChanged?.Invoke(id.heatRatio);
+                eventManager.OnHeatRatioChanged?.Invoke(id.heatRatio);
             }
 
 

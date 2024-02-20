@@ -10,21 +10,35 @@ namespace cowsins
     public class AttachmentGroupUI : MonoBehaviour, IPointerClickHandler
     {
         [HideInInspector] public Transform target;
+        
+        [SerializeField] private EventManager eventManager;
 
         private bool active;
 
         private void OnEnable()
         {
             // Subscribe to the method
-            UIEvents.onEnableAttachmentUI += Disable;
+            eventManager.OnEnableAttachmentUI.AddListener(Disable);
         }
+        
         private void OnDisable()
         {
             // Unsubscribe to the method
-            UIEvents.onEnableAttachmentUI -= Disable;
+            eventManager.OnEnableAttachmentUI.RemoveListener(Disable);
         }
+        
         private void Update()
         {
+            if (eventManager == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
+
+                if (playerObject != null)
+                {
+                    eventManager = playerObject.GetComponent<EventManager>();
+                }
+            }
+            
             // If the target is null, return
             // The target refers to the attachment, so the group is placed on top of it
             if (target == null)
@@ -45,7 +59,7 @@ namespace cowsins
         public void OnPointerClick(PointerEventData eventData)
         {
             // Handle UI event
-            UIEvents.onEnableAttachmentUI?.Invoke(this.gameObject);
+            eventManager.OnEnableAttachmentUI?.Invoke(this.gameObject);
 
             // If its currently active, disable it
             if (active)

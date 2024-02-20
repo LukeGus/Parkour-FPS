@@ -61,17 +61,19 @@ namespace cowsins
         public Events events;
 
         private WeaponController wcon;
-
+        
+        [SerializeField] private EventManager eventManager;
+        
         private void OnEnable()
         {
             // Subscribe to the event
-            UIEvents.onAttachmentUIElementClicked += DropAttachment;
+            eventManager.OnAttachmentUIElementClicked.AddListener(DropAttachment);
         }
 
         private void OnDisable()
         {
             // Unsubscribe to the event
-            UIEvents.onAttachmentUIElementClicked = null;
+            eventManager.OnAttachmentUIElementClicked.RemoveListener(DropAttachment);
         }
 
         private void Start()
@@ -219,7 +221,7 @@ namespace cowsins
 
         public void GenerateInspectionUI()
         {
-            UIEvents.onGenerateInspectionUI?.Invoke(wcon);
+            eventManager.OnGenerateInspectionUI?.Invoke(wcon);
         }
 
         /// <summary>

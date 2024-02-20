@@ -4,7 +4,21 @@ namespace cowsins
     public class TrainingTarget : EnemyHealth
     {
         [SerializeField] private float timeToRevive;
+        
+        [SerializeField] private EventManager eventManager;
 
+        private void Update()
+        {
+            if (eventManager == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
+
+                if (playerObject != null)
+                {
+                    eventManager = playerObject.GetComponent<EventManager>();
+                }
+            }
+        }
         public override void Damage(float damage)
         {
             if (isDead) return;
@@ -21,13 +35,12 @@ namespace cowsins
             if (shieldSlider != null) shieldSlider.gameObject.SetActive(false);
             if (healthSlider != null) healthSlider.gameObject.SetActive(false);
 
-            if (showKillFeed) UIEvents.onEnemyKilled.Invoke(name);
+            if (showKillFeed) eventManager.OnEnemyKilled.Invoke(name);
 
             if (transform.parent.GetComponent<CompassElement>() != null) transform.parent.GetComponent<CompassElement>().Remove();
 
             GetComponent<Animator>().Play("Target_Die");
-
-
+            
             SoundManager.Instance.PlaySound(dieSFX, 0, 0, false, 0);
         }
         private void Revive()

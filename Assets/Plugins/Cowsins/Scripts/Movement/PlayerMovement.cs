@@ -63,6 +63,8 @@ namespace cowsins
         private Rigidbody rb;
 
         [HideInInspector] public WeaponController weapon;
+        
+        [SerializeField] private EventManager eventManager;
 
 
         //Rotation and look
@@ -369,7 +371,7 @@ namespace cowsins
             jumpCount = maxJumps;
             if (canDash && !infiniteDashes)
             {
-                UIEvents.onInitializeDashUI?.Invoke(amountOfDashes);
+                eventManager.OnInitializeDashUI?.Invoke(amountOfDashes);
                 currentDashes = amountOfDashes;
             }
 
@@ -1001,13 +1003,13 @@ namespace cowsins
         {
             // Gain a dash
             currentDashes += 1;
-            UIEvents.onDashGained?.Invoke();
+            eventManager.OnDashGained?.Invoke();
         }
         public void RegainDash(object s, EventArgs e)
         {
             // Wait to regain a new dash
             Invoke(nameof(RegainDash), dashCooldown);
-            UIEvents.onDashUsed?.Invoke(currentDashes);
+            eventManager.OnDashUsed?.Invoke(currentDashes);
         }
 
         #endregion

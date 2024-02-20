@@ -1108,6 +1108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  eventManager: {fileID: 0}
 --- !u!114 &2938419716679030195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2265,6 +2266,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  eventManager: {fileID: 0}
 --- !u!114 &8388561592874824535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3396,6 +3398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ead1eedae63625498244a83493d2cf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventManager: {fileID: 6460304782660554861}
   useCoins: 1
 --- !u!114 &3775852453587351114
 MonoBehaviour:
@@ -4005,6 +4008,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  eventManager: {fileID: 0}
 --- !u!114 &2197392886124824708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4699,6 +4703,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  eventManager: {fileID: 0}
 --- !u!114 &7171453060639727803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5119,7 +5124,7 @@ MonoBehaviour:
   playerStates: {fileID: 4670440184625776986}
   weaponStates: {fileID: 4670440184625776985}
   coinManager: {fileID: 3854449681258755313}
-  interactManager: {fileID: 0}
+  eventManager: {fileID: 6460304782660554861}
 --- !u!223 &4670440183323562702
 Canvas:
   m_ObjectHideFlags: 0
@@ -5915,6 +5920,7 @@ GameObject:
   - component: {fileID: 3470504077978768454}
   - component: {fileID: 3981703476922764603}
   - component: {fileID: 2528739105824184529}
+  - component: {fileID: 6460304782660554861}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -6052,6 +6058,93 @@ MonoBehaviour:
   player: {fileID: 4670440183478939780}
   mainCamera: {fileID: 4670440183349176824}
   weaponCamera: {fileID: 4670440183808780500}
+--- !u!114 &6460304782660554861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4670440183478939780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea4c9cfc7521f6646acdb95e108b89ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  BasicHealthUISetUp:
+    m_PersistentCalls:
+      m_Calls: []
+  HealthDisplayMethod:
+    m_PersistentCalls:
+      m_Calls: []
+  NumericHealthDisplayMethod:
+    m_PersistentCalls:
+      m_Calls: []
+  AllowedInteraction:
+    m_PersistentCalls:
+      m_Calls: []
+  ForbiddenInteraction:
+    m_PersistentCalls:
+      m_Calls: []
+  DisableInteractionUI:
+    m_PersistentCalls:
+      m_Calls: []
+  OnInteractionProgressChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFinishInteractionProgress:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGenerateInspectionUI:
+    m_PersistentCalls:
+      m_Calls: []
+  OnInitializeDashUI:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDashGained:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDashUsed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnemyHit:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnemyKilled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDetectReloadMethod:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeatRatioChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBulletsChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  DisableWeaponUI:
+    m_PersistentCalls:
+      m_Calls: []
+  SetWeaponDisplay:
+    m_PersistentCalls:
+      m_Calls: []
+  EnableWeaponDisplay:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCoinsChange:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAttachmentUIElementClicked:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAttachmentUIElementClickedNewAttachment:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableAttachmentUI:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4670440183517853739
 GameObject:
   m_ObjectHideFlags: 0
@@ -7789,6 +7882,7 @@ MonoBehaviour:
   playerCam: {fileID: 4670440184632325360}
   orientation: {fileID: 4670440184822821464}
   weapon: {fileID: 0}
+  eventManager: {fileID: 6460304782660554861}
   canRunBackwards: 0
   canRunWhileShooting: 0
   canJumpWhileCrouching: 1
@@ -8036,6 +8130,7 @@ MonoBehaviour:
   currentWeapon: 0
   id: {fileID: 0}
   holding: 0
+  eventManager: {fileID: 6460304782660554861}
   crosshairPreset: {fileID: 2655988077585873504, guid: c578889a819b05c4aacc11a6abb692ac, type: 2}
   selectingWeapon: 0
 --- !u!114 &4670440184625776988
@@ -8094,6 +8189,7 @@ MonoBehaviour:
     OnHeal:
       m_PersistentCalls:
         m_Calls: []
+  eventManager: {fileID: 6460304782660554861}
 --- !u!114 &4670440184625776987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8200,6 +8296,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  eventManager: {fileID: 6460304782660554861}
 --- !u!114 &2605387597817129817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17696,6 +17793,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  eventManager: {fileID: 0}
 --- !u!114 &8717390525991482185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18336,6 +18434,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  eventManager: {fileID: 0}
 --- !u!114 &7412298454632292042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19279,6 +19378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  eventManager: {fileID: 0}
 --- !u!114 &5336664873880389406
 MonoBehaviour:
   m_ObjectHideFlags: 0
