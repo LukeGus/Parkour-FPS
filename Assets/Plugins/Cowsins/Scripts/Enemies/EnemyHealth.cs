@@ -17,17 +17,6 @@ namespace cowsins
     /// </summary>
     public class EnemyHealth : MonoBehaviour, IDamageable
     {
-        [System.Serializable]
-        public class Events
-        {
-            public UnityEvent OnSpawn;
-            public UnityEvent OnShoot;
-            public UnityEvent OnDamaged;
-            public UnityEvent OnEnemyHit;
-            public UnityEvent<string> OnEnemyKilled; // Add a string parameter here
-            public UnityEvent OnDeath;
-        }
-
 
         [Tooltip("Name of the enemy. This will appear on the killfeed"), SerializeField]
         protected string _name;
@@ -60,11 +49,15 @@ namespace cowsins
 
         [Tooltip("Horizontal randomness variation"), SerializeField]
         private float xVariation;
+        
+        [SerializeField] private EventManager eventManager;
 
         [SerializeField]
         protected AudioClip dieSFX;
 
         public Events events;
+        
+        private bool sentOnSpawn;
 
         protected bool isDead;
 
@@ -75,9 +68,6 @@ namespace cowsins
             // Status initial settings
             health = maxHealth;
             shield = maxShield;
-
-            // Spawn
-            events.OnSpawn.Invoke();
 
             // UI 
             // Determine max values
@@ -93,12 +83,28 @@ namespace cowsins
         // Update is called once per frame
         public virtual void Update()
         {
+            if (eventManager == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
+
+                if (playerObject != null)
+                {
+                    eventManager = playerObject.GetComponent<EventManager>();
+                }
+            }
+            
             //Handle UI 
             if (healthSlider != null) healthSlider.value = Mathf.Lerp(healthSlider.value, health, Time.deltaTime * 6);
             if (shieldSlider != null) shieldSlider.value = Mathf.Lerp(shieldSlider.value, shield, Time.deltaTime * 4);
 
             // Manage health
             if (health <= 0 && !isDead) Die();
+
+            if (!sentOnSpawn && eventManager != null)
+            {
+                eventManager.OnSpawn.Invoke();
+                sentOnSpawn = true;
+            }
         }
         /// <summary>
         /// Since it is IDamageable, it can take damage, if a shot is landed, damage the enemy
@@ -122,8 +128,9 @@ namespace cowsins
             }
 
             // Custom event on damaged
-            events.OnDamaged.Invoke();
-            events.OnEnemyHit.Invoke();
+            eventManager.OnDamaged.Invoke();
+            eventManager.OnEnemyHit.Invoke();
+            
             // If you do not want to show a damage pop up, stop, do not continue
             if (!showUI) return;
             GameObject popup = Instantiate(damagePopUp, transform.position, Quaternion.identity) as GameObject;
@@ -138,13 +145,13 @@ namespace cowsins
         {
             isDead = true;
             // Custom event on damaged
-            events.OnDeath.Invoke();
+            eventManager.OnDeath.Invoke();
 
             SoundManager.Instance.PlaySound(dieSFX, 0, 1, false, 0);
             // Does it display killfeed on death? 
             if (showKillFeed)
             {
-                events.OnEnemyKilled.Invoke(_name);
+                eventManager.OnEnemyKilled.Invoke(_name);
             }
             if (deathEffect) Instantiate(deathEffect, transform.position, Quaternion.identity);
             if (destroyOnDie) Destroy(this.gameObject);
@@ -188,13 +195,8 @@ namespace cowsins
             }
             EditorGUILayout.PropertyField(serializedObject.FindProperty("showKillFeed"));
             EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField("Events", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("events.OnSpawn"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("events.OnShoot"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("events.OnDamaged"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("events.OnEnemyHit"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("events.OnEnemyKilled"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("events.OnDeath"));
+            EditorGUILayout.LabelField("REFERENCES", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("eventManager"));
             serializedObject.ApplyModifiedProperties();
 
         }

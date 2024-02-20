@@ -7,6 +7,8 @@ namespace cowsins
 {
     public class EventManager : MonoBehaviour
     {
+        public bool useDebug;
+        
         public UnityEvent<float, float, bool> OnHealthChanged;
         public UnityEvent<float, float, float, float> BasicHealthUISetUp;
         public UnityEvent<float, float> HealthDisplayMethod;
@@ -22,6 +24,10 @@ namespace cowsins
         public UnityEvent<int> OnDashUsed;
         public UnityEvent OnEnemyHit;
         public UnityEvent<string> OnEnemyKilled;
+        public UnityEvent OnSpawn;
+        public UnityEvent OnShoot;
+        public UnityEvent OnDamaged;
+        public UnityEvent OnDeath;
         public UnityEvent<bool, bool> OnDetectReloadMethod;
         public UnityEvent<float> OnHeatRatioChanged;
         public UnityEvent<int, int, bool, bool> OnBulletsChanged;
@@ -50,6 +56,10 @@ namespace cowsins
             OnDashUsed.AddListener(DashUsed);
             OnEnemyHit.AddListener(EnemyHit);
             OnEnemyKilled.AddListener(EnemyKilled);
+            OnSpawn.AddListener(Spawn);
+            OnShoot.AddListener(Shoot);
+            OnDamaged.AddListener(Damaged);
+            OnDeath.AddListener(Death);
             OnDetectReloadMethod.AddListener(DetectReloadMethod);
             OnHeatRatioChanged.AddListener(HeatRatioChanged);
             OnBulletsChanged.AddListener(BulletsChanged);
@@ -60,107 +70,6 @@ namespace cowsins
             OnAttachmentUIElementClicked.AddListener(AttachmentUIElementClicked);
             OnAttachmentUIElementClickedNewAttachment.AddListener(AttachmentUIElementClickedNewAttachment);
             OnEnableAttachmentUI.AddListener(EnableAttachmentUI);
-        }
-        
-        private void HealthChanged(float currentHealth, float maxHealth, bool isHealing)
-        {
-            Debug.Log("HealthChanged");
-        }
-        private void HealthUISetUp(float maxHealth, float maxShield, float currentHealth, float currentShield)
-        {
-            Debug.Log("HealthUISetUp");
-        }
-        private void HealthDisplay(float currentHealth, float maxHealth)
-        {
-            Debug.Log("HealthDisplay");
-        }
-        private void NumericHealthDisplay(float currentHealth, float maxHealth)
-        {
-            Debug.Log("NumericHealthDisplay");
-        }
-        private void InteractionAllowed(string interaction)
-        {
-            Debug.Log("InteractionAllowed");
-        }
-        private void InteractionForbidden()
-        {
-            Debug.Log("InteractionForbidden");
-        }
-        private void DisableInteraction()
-        {
-            Debug.Log("DisableInteraction");
-        }
-        private void InteractionProgressChanged(float progress)
-        {
-            Debug.Log("InteractionProgressChanged");
-        }
-        private void FinishInteractionProgress()
-        {
-            Debug.Log("FinishInteractionProgress");
-        }
-        private void GenerateInspectionUI(WeaponController weaponController)
-        {
-            Debug.Log("GenerateInspectionUI");
-        }
-        private void InitializeDashUI(int maxDashes)
-        {
-            Debug.Log("InitializeDashUI");
-        }
-        private void DashGained()
-        {
-            Debug.Log("DashGained");
-        }
-        private void DashUsed(int remainingDashes)
-        {
-            Debug.Log("DashUsed");
-        }
-        private void EnemyHit()
-        {
-            Debug.Log("EnemyHit");
-        }
-        private void EnemyKilled(string enemyName)
-        {
-            Debug.Log("EnemyKilled");
-        }
-        private void DetectReloadMethod(bool isReloading, bool isReloadingMagazine)
-        {
-            Debug.Log("DetectReloadMethod");
-        }
-        private void HeatRatioChanged(float heatRatio)
-        {
-            Debug.Log("HeatRatioChanged");
-        }
-        private void BulletsChanged(int currentBullets, int maxBullets, bool isReloading, bool isReloadingMagazine)
-        {
-            Debug.Log("BulletsChanged");
-        }
-        private void DisableWeapon()
-        {
-            Debug.Log("DisableWeapon");
-        }
-        private void WeaponDisplay(Weapon_SO weapon)
-        {
-            Debug.Log("WeaponDisplay");
-        }
-        private void EnableWeapon()
-        {
-            Debug.Log("EnableWeapon");
-        }
-        private void CoinsChange(int coins)
-        {
-            Debug.Log("CoinsChange");
-        }
-        private void AttachmentUIElementClicked(Attachment attachment, bool isEquipped)
-        {
-            Debug.Log("AttachmentUIElementClicked");
-        }
-        private void AttachmentUIElementClickedNewAttachment(Attachment attachment, int attachmentIndex)
-        {
-            Debug.Log("AttachmentUIElementClickedNewAttachment");
-        }
-        private void EnableAttachmentUI(GameObject attachment)
-        {
-            Debug.Log("EnableAttachmentUI");
         }
         
         private void OnDisable()
@@ -190,6 +99,123 @@ namespace cowsins
             OnAttachmentUIElementClicked.RemoveListener(AttachmentUIElementClicked);
             OnAttachmentUIElementClickedNewAttachment.RemoveListener(AttachmentUIElementClickedNewAttachment);
             OnEnableAttachmentUI.RemoveListener(EnableAttachmentUI);
+        }
+        
+        private void HealthChanged(float health, float shield, bool damage)
+        {
+            if (useDebug) Debug.Log($"Health Changed: {health}, Shield: {shield}, Damage: {damage}");
+        }
+        private void HealthUISetUp(float health, float shield, float maxHealth, float maxShield)
+        {
+            if (useDebug) Debug.Log($"Health UI Set Up: Health: {health}, Shield: {shield}, Max Health: {maxHealth}, Max Shield: {maxShield}");
+        }
+        private void HealthDisplay(float health, float shield)
+        {
+            if (useDebug) Debug.Log($"Health Display: Health: {health}, Shield: {shield}");
+        }
+        private void NumericHealthDisplay(float health, float shield)
+        {
+            if (useDebug) Debug.Log($"Numeric Health Display: Health: {health}, Shield: {shield}");
+        }
+        private void InteractionAllowed(string interaction)
+        {
+            if (useDebug) Debug.Log($"Interaction Allowed: {interaction}");
+        }
+        private void InteractionForbidden()
+        {
+            if (useDebug) Debug.Log("Interaction Forbidden");
+        }
+        private void DisableInteraction()
+        {
+            if (useDebug) Debug.Log("Disable Interaction");
+        }
+        private void InteractionProgressChanged(float progress)
+        {
+            if (useDebug) Debug.Log($"Interaction Progress Changed: {progress}");
+        }
+        private void FinishInteractionProgress()
+        {
+            if (useDebug) Debug.Log("Finish Interaction Progress");
+        }
+        private void GenerateInspectionUI(WeaponController weaponController)
+        {
+            if (useDebug) Debug.Log($"Generate Inspection UI: {weaponController}");
+        }
+        private void InitializeDashUI(int dashCount)
+        {
+            if (useDebug) Debug.Log($"Initialize Dash UI: {dashCount}");
+        }
+        private void DashGained()
+        {
+            if (useDebug) Debug.Log("Dash Gained");
+        }
+        private void DashUsed(int dashCount)
+        {
+            if (useDebug) Debug.Log($"Dash Used: {dashCount}");
+        }
+        private void EnemyHit()
+        {
+            if (useDebug) Debug.Log("Enemy Hit");
+        }
+        private void EnemyKilled(string enemyName)
+        {
+            if (useDebug) Debug.Log($"Enemy Killed: {enemyName}");
+        }
+        private void Spawn()
+        {
+            if (useDebug) Debug.Log("Spawn");
+        }
+        private void Shoot()
+        {
+            if (useDebug) Debug.Log("Shoot");
+        }
+        private void Damaged()
+        {
+            if (useDebug) Debug.Log("Damaged");
+        }
+        private void Death()
+        {
+            if (useDebug) Debug.Log("Death");
+        }
+        private void DetectReloadMethod(bool canReload, bool isReloading)
+        {
+            if (useDebug) Debug.Log($"Detect Reload Method: Can Reload: {canReload}, Is Reloading: {isReloading}");
+        }
+        private void HeatRatioChanged(float heatRatio)
+        {
+            if (useDebug) Debug.Log($"Heat Ratio Changed: {heatRatio}");
+        }
+        private void BulletsChanged(int currentBullets, int maxBullets, bool isReloading, bool canReload)
+        {
+            if (useDebug) Debug.Log($"Bullets Changed: Current Bullets: {currentBullets}, Max Bullets: {maxBullets}, Is Reloading: {isReloading}, Can Reload: {canReload}");
+        }
+        private void DisableWeapon()
+        {
+            if (useDebug) Debug.Log("Disable Weapon");
+        }
+        private void WeaponDisplay(Weapon_SO weapon)
+        {
+            if (useDebug) Debug.Log($"Weapon Display: {weapon}");
+        }
+        private void EnableWeapon()
+        {
+            if (useDebug) Debug.Log("Enable Weapon");
+        }
+        private void CoinsChange(int coins)
+        {
+            if (useDebug) Debug.Log($"Coins Change: {coins}");
+        }
+        private void AttachmentUIElementClicked(Attachment attachment, bool active)
+        {
+            if (useDebug) Debug.Log($"Attachment UI Element Clicked: {attachment}, Active: {active}");
+        }
+        private void AttachmentUIElementClickedNewAttachment(Attachment attachment, int attachmentIndex)
+        {
+            if (useDebug) Debug.Log($"Attachment UI Element Clicked New Attachment: {attachment}, Attachment Index: {attachmentIndex}");
+        }
+        private void EnableAttachmentUI(GameObject gameObject)
+        {
+            if (useDebug) Debug.Log($"Enable Attachment UI: {gameObject}");
         }
     }
 }

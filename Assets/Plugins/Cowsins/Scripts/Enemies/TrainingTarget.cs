@@ -21,15 +21,35 @@ namespace cowsins
         }
         public override void Damage(float damage)
         {
+            if (eventManager == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
+
+                if (playerObject != null)
+                {
+                    eventManager = playerObject.GetComponent<EventManager>();
+                }
+            }
+            
             if (isDead) return;
             base.Damage(damage);
             GetComponent<Animator>().Play("Target_Hit");
         }
         public override void Die()
         {
+            if (eventManager == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
+
+                if (playerObject != null)
+                {
+                    eventManager = playerObject.GetComponent<EventManager>();
+                }
+            }
+            
             if (isDead) return;
             isDead = true;
-            events.OnDeath.Invoke();
+            eventManager.OnDeath.Invoke();
             Invoke("Revive", timeToRevive);
 
             if (shieldSlider != null) shieldSlider.gameObject.SetActive(false);
@@ -45,6 +65,16 @@ namespace cowsins
         }
         private void Revive()
         {
+            if (eventManager == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
+
+                if (playerObject != null)
+                {
+                    eventManager = playerObject.GetComponent<EventManager>();
+                }
+            }
+            
             isDead = false;
             GetComponent<Animator>().Play("Target_Revive");
             health = maxHealth;

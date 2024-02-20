@@ -18,6 +18,8 @@ namespace cowsins
         [Tooltip("Target velocity magnitude"), SerializeField] private float speed;
 
         [SerializeField] private float timeToRevive;
+        
+        [SerializeField] private EventManager eventManager;
 
         private Vector3 movementDir;
 
@@ -36,6 +38,16 @@ namespace cowsins
 
         public override void Update()
         {
+            if (eventManager == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
+
+                if (playerObject != null)
+                {
+                    eventManager = playerObject.GetComponent<EventManager>();
+                }
+            }
+            
             // Since we override the update method, make sure to call the base function
             base.Update();
 
@@ -70,7 +82,7 @@ namespace cowsins
                                 // Set to dead
             isDead = true;
             // Call custom event
-            events.OnDeath.Invoke();
+            eventManager.OnDeath.Invoke();
 
             // Disable any possible hit effects
             for (int i = 0; i < transform.childCount; i++)

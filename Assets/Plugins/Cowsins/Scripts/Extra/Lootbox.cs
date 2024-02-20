@@ -35,6 +35,16 @@ namespace cowsins
                 }
             }
             
+            if (player == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
+
+                if (playerObject != null)
+                {
+                    player = playerObject.transform;
+                }
+            }
+            
             if (weaponController == null)
             {
                 GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");

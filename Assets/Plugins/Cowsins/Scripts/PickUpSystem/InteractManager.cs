@@ -10,15 +10,6 @@ namespace cowsins
 {
     public class InteractManager : MonoBehaviour
     {
-        [System.Serializable]
-        public class Events
-        {
-            public UnityEvent OnFinishInteractionProgress;
-            public UnityEvent<string> AllowedInteraction;
-            public UnityEvent ForbiddenInteraction;
-            public UnityEvent<float> OnInteractionProgressChanged;
-            public UnityEvent DisableInteractionUI;
-        }
 
         [Tooltip("Attach your main camera"), SerializeField] private Camera mainCamera; // Attach your main camera
 
@@ -106,7 +97,7 @@ namespace cowsins
                 if (IsForbiddenInteraction(interactableHit))
                 {
                     // If it is forbidden, call the event
-                    events.ForbiddenInteraction?.Invoke();
+                    eventManager.ForbiddenInteraction?.Invoke();
                 }
                 else
                 {
@@ -145,7 +136,7 @@ namespace cowsins
             if (lookingAt == interactable.gameObject) return;
             lookingAt = interactable.gameObject;
             interactable.Highlight();
-            events.AllowedInteraction?.Invoke(interactable.interactText);
+            eventManager.AllowedInteraction?.Invoke(interactable.interactText);
         }
 
         private void DisableLookingAtInteractable()
@@ -160,7 +151,7 @@ namespace cowsins
         private void DisableInteractionUI()
         {
             DisableLookingAtInteractable();
-            events.DisableInteractionUI?.Invoke();
+            eventManager.DisableInteractionUI?.Invoke();
         }
 
         private void DetectInput()
@@ -177,13 +168,13 @@ namespace cowsins
                 progressElapsed += Time.deltaTime;
                 if (progressRequiredToInteract > 0)
                 {
-                    events.OnInteractionProgressChanged?.Invoke(progressElapsed / progressRequiredToInteract);
+                    eventManager.OnInteractionProgressChanged?.Invoke(progressElapsed / progressRequiredToInteract);
                 }
             }
             else
             {
                 progressElapsed = -.01f;
-                events.OnFinishInteractionProgress?.Invoke();
+                eventManager.OnFinishInteractionProgress?.Invoke();
             }
             // Interact
             if (progressElapsed >= progressRequiredToInteract) PerformInteraction();
@@ -202,8 +193,8 @@ namespace cowsins
             // Manage UI
             lookingAt = null;
 
-            events.DisableInteractionUI?.Invoke();
-            events.OnFinishInteractionProgress?.Invoke();
+            eventManager.DisableInteractionUI?.Invoke();
+            eventManager.OnFinishInteractionProgress?.Invoke();
         }
         private void HandleDrop()
         {

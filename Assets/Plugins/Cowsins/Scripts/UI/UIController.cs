@@ -175,6 +175,8 @@ namespace cowsins
         private void UpdateHealthUI(float health, float shield, bool damaged)
         {
             healthDisplayMethod?.Invoke(health, shield);
+            
+            Debug.Log("Health: " + health + " Shield: " + shield);
 
             Color colorSelected = damaged ? damageColor : healColor;
             healthStatesEffect.color = colorSelected;
@@ -200,7 +202,7 @@ namespace cowsins
                 shieldSlider.maxValue = maxShield;
             }
 
-            healthDisplayMethod?.Invoke(health, shield);
+            healthDisplayMethod.Invoke(health, shield);
 
             if (shield == 0) shieldSlider.gameObject.SetActive(false);
         }
@@ -421,8 +423,8 @@ namespace cowsins
             addXP = UpdateXP;
             eventManager.OnHealthChanged.AddListener(UpdateHealthUI);
             eventManager.BasicHealthUISetUp.AddListener(HealthSetUp);
-            if (barHealthDisplay) eventManager.HealthDisplayMethod.AddListener(BarHealthDisplayMethod);
-            if (numericHealthDisplay) eventManager.HealthDisplayMethod.AddListener(NumericHealthDisplayMethod);
+            if (barHealthDisplay) healthDisplayMethod += BarHealthDisplayMethod;
+            if (numericHealthDisplay) healthDisplayMethod += NumericHealthDisplayMethod;
             eventManager.AllowedInteraction.AddListener(AllowedInteraction);
             eventManager.ForbiddenInteraction.AddListener(ForbiddenInteraction);
             eventManager.DisableInteractionUI.AddListener(DisableInteractionUI);
@@ -448,8 +450,8 @@ namespace cowsins
         {
             eventManager.OnHealthChanged.RemoveListener(UpdateHealthUI);
             eventManager.BasicHealthUISetUp.RemoveListener(HealthSetUp);
-            if (barHealthDisplay) eventManager.HealthDisplayMethod.RemoveListener(BarHealthDisplayMethod);
-            if (numericHealthDisplay) eventManager.HealthDisplayMethod.RemoveListener(NumericHealthDisplayMethod);
+            if (barHealthDisplay) healthDisplayMethod -= BarHealthDisplayMethod;
+            if (numericHealthDisplay) healthDisplayMethod -= NumericHealthDisplayMethod;
             eventManager.AllowedInteraction.RemoveListener(AllowedInteraction);
             eventManager.ForbiddenInteraction.RemoveListener(ForbiddenInteraction);
             eventManager.DisableInteractionUI.RemoveListener(DisableInteractionUI);
