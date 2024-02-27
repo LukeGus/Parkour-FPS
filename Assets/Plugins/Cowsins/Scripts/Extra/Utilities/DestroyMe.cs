@@ -1,10 +1,13 @@
 /// <summary>
-/// This script belongs to cowsins™ as a part of the cowsins´ FPS Engine. All rights reserved. 
+/// This script belongs to cowsinsï¿½ as a part of the cowsinsï¿½ FPS Engine. All rights reserved. 
 /// </summary>
+
+using FishNet.Object;
+using FishNet;
 using UnityEngine;
 namespace cowsins
 {
-    public class DestroyMe : MonoBehaviour
+    public class DestroyMe : NetworkBehaviour
     {
         public float timeToDestroy;
 
@@ -16,6 +19,7 @@ namespace cowsins
         // Update is called once per frame
         void DestroyMeObj()
         {
+            if(IsSpawned) InstanceFinder.ServerManager.Despawn(gameObject);
             Destroy(this.gameObject);
         }
     }

@@ -1,8 +1,9 @@
+using FishNet.Object;
 using UnityEngine;
 
 namespace cowsins
 {
-    public class CoinManager : MonoBehaviour
+    public class CoinManager : NetworkBehaviour
     {
         public static CoinManager Instance; // Singleton instance of the CoinManager
         
@@ -15,19 +16,29 @@ namespace cowsins
 
         private void Awake()
         {
-            if (Instance == null) // Check if an instance already exists
+            Invoke("SetInstance", 1);
+        }
+
+        private void SetInstance()
+        {
+#if !UNITY_SERVER
+            if (Instance == null && NetworkDisabler.Instance.isOwner)
             {
-                Instance = this; // Set the instance to this object
+                Instance = this;
             }
-            else
+# else
+            if (Instance == null)
             {
-                Destroy(this.gameObject); // Another instance exists, destroy this one
+                Instance = this;
             }
+#endif
         }
 
         private void Start()
         {
             eventManager.OnCoinsChange?.Invoke(coins);
+            
+            eventManager.OnCoinsChange.AddListener(AddCoins);
         }
 
         // Add coins to the total count

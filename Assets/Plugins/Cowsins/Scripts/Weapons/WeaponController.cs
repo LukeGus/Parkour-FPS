@@ -5,6 +5,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using cowsins;
+using FishNet;
+using FishNet.Managing.Server;
 #if UNITY_EDITOR
 using UnityEditor.Presets;
 #endif
@@ -47,7 +49,7 @@ namespace cowsins
 
         [Tooltip("Attach your camera pivot object")] public Transform cameraPivot;
 
-        private Transform[] firePoint;
+        [HideInInspector] public Transform[] firePoint;
 
         [Tooltip("Attach your weapon holder")] public Transform weaponHolder;
 
@@ -73,7 +75,7 @@ namespace cowsins
 
         [Tooltip("What objects should be hit")] public LayerMask hitLayer;
 
-        [Tooltip("Do you want to resize your crosshair on shooting ? "), SerializeField] private bool resizeCrosshair;
+        [Tooltip("Do you want to resize your crosshair on shooting ? ")] public bool resizeCrosshair;
 
         [Tooltip("Do not draw the crosshair when aiming a weapon")] public bool removeCrosshairOnAiming;
 
@@ -91,9 +93,9 @@ namespace cowsins
 
         private float spread;
 
-        private float damagePerBullet;
+        [HideInInspector] public float damagePerBullet;
 
-        private float penetrationAmount;
+        [HideInInspector] public float penetrationAmount;
 
         private float camShakeAmount;
 
@@ -116,7 +118,7 @@ namespace cowsins
 
         public bool canShoot;
 
-        RaycastHit hit;
+        [HideInInspector] public RaycastHit hit;
 
         public int currentWeapon;
 
@@ -124,7 +126,7 @@ namespace cowsins
 
         public WeaponIdentification id;
 
-        private PlayerStats stats;
+        [HideInInspector] public PlayerStats stats;
 
         private GameObject muzzleVFX;
 
@@ -227,7 +229,7 @@ namespace cowsins
                 bulletsPerFire = weapon.bulletsPerFire;
                 StartCoroutine(HandleShooting());
             }
-            if (weapon.timeBetweenShots == 0) SoundManager.Instance.PlaySound(fireSFX, 0, weapon.pitchVariationFiringSFX, true, 0);
+            if (weapon.timeBetweenShots == 0 && SoundManager.Instance != null) SoundManager.Instance.PlaySound(fireSFX, 0, weapon.pitchVariationFiringSFX, true, 0);
             Invoke(nameof(CanShoot), fireRate);
         }
 
@@ -309,7 +311,7 @@ namespace cowsins
             {
                 shooting = true;
 
-                CamShake.instance.ShootShake(camShakeAmount);
+                if (CamShake.instance != null) CamShake.instance.ShootShake(camShakeAmount);
                 if (weapon.useProceduralShot) ProceduralShot.Instance.Shoot(weapon.proceduralShotPattern);
 
                 // Determine if we want to add an effect for FOV
@@ -332,6 +334,7 @@ namespace cowsins
                 else if (style == 1)
                 {
                     yield return new WaitForSeconds(weapon.shootDelay);
+                    Debug.Log("Projectile Shot");
                     ProjectileShot();
                 }
 
@@ -348,6 +351,7 @@ namespace cowsins
         private void HitscanShot()
         {
             events.OnShoot.Invoke();
+            
             if (resizeCrosshair && uiController.crosshair != null) uiController.crosshair.Resize(weapon.crosshairResize * 100);
 
             Transform hitObj;
@@ -387,7 +391,7 @@ namespace cowsins
             }
         }
 
-        private IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hit)
+        public IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hit)
         {
             float time = 0;
             Vector3 startPos = trail.transform.position;
@@ -413,28 +417,29 @@ namespace cowsins
         {
             events.OnShoot.Invoke();
             if (resizeCrosshair && uiController.crosshair != null) uiController.crosshair.Resize(weapon.crosshairResize * 100);
-
+            
             Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
-            Vector3 destination = (Physics.Raycast(ray, out hit) && !hit.transform.CompareTag("Player")) ? destination = hit.point + CowsinsUtilities.GetSpreadDirection(weapon.spreadAmount, mainCamera) : destination = ray.GetPoint(50f) + CowsinsUtilities.GetSpreadDirection(weapon.spreadAmount, mainCamera);
+            Vector3 destination = (Physics.Raycast(ray, out hit) ? destination = hit.point + CowsinsUtilities.GetSpreadDirection(weapon.spreadAmount, mainCamera) : destination = ray.GetPoint(50f) + CowsinsUtilities.GetSpreadDirection(weapon.spreadAmount, mainCamera));
 
             foreach (var p in firePoint)
             {
-                Bullet bullet = Instantiate(weapon.projectile, p.position, p.transform.rotation) as Bullet;
+                GameObject bulletObject = Instantiate(weapon.projectile.gameObject, p.position, p.transform.rotation);
+                Bullet bulletScript = bulletObject.AddComponent<Bullet>();
 
-                if (weapon.explosionOnHit) bullet.explosionVFX = weapon.explosionVFX;
+                if (weapon.explosionOnHit) bulletScript.explosionVFX = weapon.explosionVFX;
 
-                bullet.hurtsPlayer = weapon.hurtsPlayer;
-                bullet.explosionOnHit = weapon.explosionOnHit;
-                bullet.explosionRadius = weapon.explosionRadius;
-                bullet.explosionForce = weapon.explosionForce;
+                bulletScript.hurtsPlayer = weapon.hurtsPlayer;
+                bulletScript.explosionOnHit = weapon.explosionOnHit;
+                bulletScript.explosionRadius = weapon.explosionRadius;
+                bulletScript.explosionForce = weapon.explosionForce;
 
-                bullet.criticalMultiplier = weapon.criticalDamageMultiplier;
-                bullet.destination = destination;
-                bullet.player = this.transform;
-                bullet.speed = weapon.speed;
-                bullet.GetComponent<Rigidbody>().isKinematic = (!weapon.projectileUsesGravity) ? true : false;
-                bullet.damage = damagePerBullet * stats.damageMultiplier;
-                bullet.duration = weapon.bulletDuration;
+                bulletScript.criticalMultiplier = weapon.criticalDamageMultiplier;
+                bulletScript.destination = destination;
+                bulletScript.player = this.transform;
+                bulletScript.speed = weapon.speed;
+                bulletScript.GetComponent<Rigidbody>().isKinematic = (!weapon.projectileUsesGravity) ? true : false;
+                bulletScript.damage = damagePerBullet * stats.damageMultiplier;
+                bulletScript.duration = weapon.bulletDuration;
             }
         }
         /// <summary>
@@ -498,7 +503,7 @@ namespace cowsins
         /// If you landed a shot onto an enemy, a hit will occur
         /// This is where that is being handled
         /// </summary>
-        private void Hit(LayerMask layer, float damage, RaycastHit h, bool damageTarget)
+        public void Hit(LayerMask layer, float damage, RaycastHit h, bool damageTarget)
         {
             events.OnHit.Invoke();
             GameObject impact = null, impactBullet = null;
@@ -512,28 +517,38 @@ namespace cowsins
                 case int l when l == LayerMask.NameToLayer("Grass"):
                     impact = Instantiate(effects.grassImpact, h.point, Quaternion.identity); // Grass
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
+                    InstanceFinder.ServerManager.Spawn(impact);
                     if (weapon != null)
                         impactBullet = Instantiate(weapon.bulletHoleImpact.grassImpact, h.point, Quaternion.identity);
+                        InstanceFinder.ServerManager.Spawn(impact);
                     break;
                 case int l when l == LayerMask.NameToLayer("Metal"):
                     impact = Instantiate(effects.metalImpact, h.point, Quaternion.identity); // Metal
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
+                    InstanceFinder.ServerManager.Spawn(impact);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.metalImpact, h.point, Quaternion.identity);
+                    InstanceFinder.ServerManager.Spawn(impactBullet);
                     break;
                 case int l when l == LayerMask.NameToLayer("Mud"):
                     impact = Instantiate(effects.mudImpact, h.point, Quaternion.identity); // Mud
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
+                    InstanceFinder.ServerManager.Spawn(impact);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.mudImpact, h.point, Quaternion.identity);
+                    InstanceFinder.ServerManager.Spawn(impactBullet);
                     break;
                 case int l when l == LayerMask.NameToLayer("Wood"):
                     impact = Instantiate(effects.woodImpact, h.point, Quaternion.identity); // Wood
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
+                    InstanceFinder.ServerManager.Spawn(impact);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.woodImpact, h.point, Quaternion.identity);
+                    InstanceFinder.ServerManager.Spawn(impactBullet);
                     break;
-                case int l when l == LayerMask.NameToLayer("Enemy"):
+                case int l when l == LayerMask.NameToLayer("Player"):
                     impact = Instantiate(effects.enemyImpact, h.point, Quaternion.identity); // Enemy
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
+                    InstanceFinder.ServerManager.Spawn(impact);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.enemyImpact, h.point, Quaternion.identity);
+                    InstanceFinder.ServerManager.Spawn(impactBullet);
                     break;
             }
 
@@ -550,20 +565,26 @@ namespace cowsins
             }
             float finalDamage = damage * GetDistanceDamageReduction(h.collider.transform);
 
+            /*
             // Check if a head shot was landed
             if (h.collider.gameObject.CompareTag("Critical"))
             {
                 CowsinsUtilities.GatherDamageableParent(h.collider.transform).Damage(finalDamage * weapon.criticalDamageMultiplier);
+                Debug.Log("Headshot");
             }
             // Check if a body shot was landed ( for children colliders )
             else if (h.collider.gameObject.CompareTag("BodyShot"))
             {
                 CowsinsUtilities.GatherDamageableParent(h.collider.transform).Damage(finalDamage);
+                Debug.Log("Bodyshot");
             }
             // Check if the collision just comes from the parent
-            else if (h.collider.GetComponent<IDamageable>() != null)
+            */
+            
+            if (h.collider.GetComponent<IDamageable>() != null)
             {
                 h.collider.GetComponent<IDamageable>().Damage(finalDamage);
+                Debug.Log("Normal shot");
             }
         }
 
@@ -582,7 +603,7 @@ namespace cowsins
             // Run custom event
             events.OnReload.Invoke();
             // Play reload sound
-            SoundManager.Instance.PlaySound(id.bulletsLeftInMagazine == 0 ? weapon.audioSFX.emptyMagReload : weapon.audioSFX.reload, .1f, 0, true, 0);
+            if(SoundManager.Instance != null) SoundManager.Instance.PlaySound(id.bulletsLeftInMagazine == 0 ? weapon.audioSFX.emptyMagReload : weapon.audioSFX.reload, .1f, 0, true, 0);
             reloading = true;
             yield return new WaitForSeconds(.001f);
 
@@ -701,7 +722,7 @@ namespace cowsins
 
             weaponObj.GetComponentInChildren<Animator>().enabled = true;
             if (playAnim) CowsinsUtilities.PlayAnim("unholster", inventory[currentWeapon].GetComponentInChildren<Animator>());
-            SoundManager.Instance.PlaySound(weapon.audioSFX.unholster, .1f, 0, true, 0);
+            if(SoundManager.Instance != null) SoundManager.Instance.PlaySound(weapon.audioSFX.unholster, .1f, 0, true, 0);
             Invoke("FinishedSelection", .5f);
 
             if (weapon.shootStyle == ShootStyle.Custom) SelectCustomShotMethod();

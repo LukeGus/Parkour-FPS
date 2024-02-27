@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using FishNet.Object;
+
 namespace cowsins
 {
     public class SoundManager : MonoBehaviour
@@ -9,15 +11,26 @@ namespace cowsins
         private AudioSource src;
         private void Awake()
         {
+            src = GetComponent<AudioSource>();
+
+            Invoke("SetInstance", 1);
+        }
+        
+        private void SetInstance()
+        {
+#if !UNITY_SERVER
+            if (Instance == null && NetworkDisabler.Instance.isOwner)
+            {
+                Instance = this;
+                transform.parent = null;
+            }
+# else
             if (Instance == null)
             {
                 Instance = this;
                 transform.parent = null;
-                DontDestroyOnLoad(gameObject);
             }
-            else Destroy(this.gameObject);
-
-            src = GetComponent<AudioSource>();
+#endif
         }
 
         public void PlaySound(AudioClip clip, float delay, float pitchAdded, bool randomPitch, float spatialBlend)

@@ -4,52 +4,18 @@ namespace cowsins
     public class TrainingTarget : EnemyHealth
     {
         [SerializeField] private float timeToRevive;
-        
-        [SerializeField] private EventManager eventManager;
 
-        private void Update()
-        {
-            if (eventManager == null)
-            {
-                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
-
-                if (playerObject != null)
-                {
-                    eventManager = playerObject.GetComponent<EventManager>();
-                }
-            }
-        }
         public override void Damage(float damage)
         {
-            if (eventManager == null)
-            {
-                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
-
-                if (playerObject != null)
-                {
-                    eventManager = playerObject.GetComponent<EventManager>();
-                }
-            }
-            
             if (isDead) return;
             base.Damage(damage);
             GetComponent<Animator>().Play("Target_Hit");
         }
         public override void Die()
         {
-            if (eventManager == null)
-            {
-                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
-
-                if (playerObject != null)
-                {
-                    eventManager = playerObject.GetComponent<EventManager>();
-                }
-            }
-            
             if (isDead) return;
             isDead = true;
-            eventManager.OnDeath.Invoke();
+            base.eventManager.OnDeath.Invoke();
             Invoke("Revive", timeToRevive);
 
             if (shieldSlider != null) shieldSlider.gameObject.SetActive(false);
@@ -60,21 +26,11 @@ namespace cowsins
             if (transform.parent.GetComponent<CompassElement>() != null) transform.parent.GetComponent<CompassElement>().Remove();
 
             GetComponent<Animator>().Play("Target_Die");
-            
-            SoundManager.Instance.PlaySound(dieSFX, 0, 0, false, 0);
+
+            if (SoundManager.Instance != null) SoundManager.Instance.PlaySound(dieSFX, 0, 0, false, 0);
         }
         private void Revive()
         {
-            if (eventManager == null)
-            {
-                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
-
-                if (playerObject != null)
-                {
-                    eventManager = playerObject.GetComponent<EventManager>();
-                }
-            }
-            
             isDead = false;
             GetComponent<Animator>().Play("Target_Revive");
             health = maxHealth;

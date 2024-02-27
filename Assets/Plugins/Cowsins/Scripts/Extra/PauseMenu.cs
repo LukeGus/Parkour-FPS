@@ -1,8 +1,9 @@
+using FishNet.Object;
 using UnityEngine;
 
 namespace cowsins
 {
-    public class PauseMenu : MonoBehaviour
+    public class PauseMenu : NetworkBehaviour
     {
         [SerializeField] private GameObject playerUI;
 
@@ -19,11 +20,23 @@ namespace cowsins
 
         private void Awake()
         {
-            Instance = this;
+            SetInstance();
 
             isPaused = false;
             menu.gameObject.SetActive(false);
             menu.alpha = 0;
+        }
+        
+        private void SetInstance()
+        {
+            if (Instance == null && IsOwner)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
         }
 
         private void Update()

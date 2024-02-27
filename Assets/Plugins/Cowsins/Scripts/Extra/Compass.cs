@@ -2,9 +2,10 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
+using FishNet.Object;
 namespace cowsins
 {
-    public class Compass : MonoBehaviour
+    public class Compass : NetworkBehaviour
     {
         [SerializeField] private RawImage compass;
         [SerializeField] private Transform player;
@@ -16,8 +17,22 @@ namespace cowsins
         public static Compass Instance { get; private set; }
         private void Awake()
         {
-            if (Instance != null && Instance != this) Destroy(this);
-            else Instance = this;
+            Invoke("SetInstance", 1);
+        }
+
+        private void SetInstance()
+        {
+#if !UNITY_SERVER
+            if (Instance == null && NetworkDisabler.Instance.isOwner)
+            {
+                Instance = this;
+            }
+# else
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+#endif
         }
 
         private void Update()

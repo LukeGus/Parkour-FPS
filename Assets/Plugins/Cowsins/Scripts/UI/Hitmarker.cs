@@ -5,6 +5,10 @@ namespace cowsins
     {
 
         public AudioClip crosshairSoundEffect;
-        private void Start() => SoundManager.Instance.PlaySound(crosshairSoundEffect, .08f, .15f, true, 0);
+
+        private void Start()
+        {
+            if(SoundManager.Instance != null) SoundManager.Instance.PlaySound(crosshairSoundEffect, .08f, .15f, true, 0);
+        }
     }
 }

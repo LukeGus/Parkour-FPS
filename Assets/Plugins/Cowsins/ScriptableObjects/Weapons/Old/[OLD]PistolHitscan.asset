@@ -16,7 +16,7 @@ MonoBehaviour:
   _name: Pistol
   pickUpGraphics: {fileID: 2092819957812016947, guid: 38510495a5c7f2b44b1a19313d96e61e, type: 3}
   icon: {fileID: 21300000, guid: 3919001d25c497d45b9bca84e848d826, type: 3}
-  shootStyle: 0
+  shootStyle: 3
   shootMethod: 1
   holdProgressSpeed: 454
   reloadStyle: 0

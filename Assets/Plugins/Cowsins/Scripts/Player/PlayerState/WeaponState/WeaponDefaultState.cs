@@ -96,7 +96,7 @@ namespace cowsins
             {
                 if (controller.id.bulletsLeftInMagazine <= 0 && InputManager.shooting && noBulletIndicator <= 0 && !holdingEmpty)
                 {
-                    SoundManager.Instance.PlaySound(controller.weapon.audioSFX.emptyMagShoot, 0, .15f, true, 0);
+                    if(SoundManager.Instance != null) SoundManager.Instance.PlaySound(controller.weapon.audioSFX.emptyMagShoot, 0, .15f, true, 0);
                     noBulletIndicator = (controller.weapon.shootMethod == ShootingMethod.HoldAndRelease || controller.weapon.shootMethod == ShootingMethod.HoldUntilReady) ? 1 : controller.weapon.fireRate;
                     holdingEmpty = true;
                 }

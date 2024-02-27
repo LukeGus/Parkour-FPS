@@ -7,6 +7,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using FishNet.Object;
+using FishNet.Object.Synchronizing;
+using FishNet;
 using UnityEngine.Events;
 
 namespace cowsins
@@ -15,18 +18,18 @@ namespace cowsins
     /// Super simple enemy script that allows any object with this component attached to receive damage,aim towards the player and shoot at it.
     /// This is not definitive and it will 100% be modified and re structured in future updates
     /// </summary>
-    public class EnemyHealth : MonoBehaviour, IDamageable
+    public class EnemyHealth : NetworkBehaviour, IDamageable
     {
 
-        [Tooltip("Name of the enemy. This will appear on the killfeed"), SerializeField]
+        [Tooltip("Name of the enemy. This will appear on the killfeed"), SerializeField] [SyncVar]
         protected string _name;
 
-        protected float health;
-        [Tooltip("initial enemy health "), SerializeField]
+        [SyncVar] protected float health;
+        [Tooltip("initial enemy health "), SerializeField] [SyncVar]
         protected float maxHealth;
 
-        protected float shield;
-        [Tooltip("initial enemy shield"), SerializeField]
+        [SyncVar] protected float shield;
+        [Tooltip("initial enemy shield"), SerializeField] [SyncVar]
         protected float maxShield;
 
         [Tooltip("When the object dies, decide if it should be destroyed or not.")] public bool destroyOnDie;
@@ -50,7 +53,7 @@ namespace cowsins
         [Tooltip("Horizontal randomness variation"), SerializeField]
         private float xVariation;
         
-        [SerializeField] private EventManager eventManager;
+        public EventManager eventManager;
 
         [SerializeField]
         protected AudioClip dieSFX;
@@ -141,6 +144,7 @@ namespace cowsins
             float xRand = Random.Range(-xVariation, xVariation);
             popup.transform.position = popup.transform.position + new Vector3(xRand, 0, 0);
         }
+        
         public virtual void Die()
         {
             isDead = true;

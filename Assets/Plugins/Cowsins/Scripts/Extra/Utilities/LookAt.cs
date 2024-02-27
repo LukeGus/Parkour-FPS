@@ -5,23 +5,27 @@ namespace cowsins
     public class LookAt : MonoBehaviour
     {
         private Transform player;
-
-        private void Update()
+        
+        void Update()
         {
             if (player == null)
             {
-                GameObject playerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
+                GameObject mainPlayerObject = GameObject.FindGameObjectWithTag("LocalPlayer");
 
-                if (playerObject != null)
+                if (mainPlayerObject != null)
                 {
-                    player = playerObject.transform;
+                    GameObject playerObject = GameObject.Find("Player");
+
+                    if (playerObject != null)
+                    {
+                        player = playerObject.transform;
+                    }
                 }
             }
 
-            if (player != null && player.gameObject.activeInHierarchy)
+            if (player != null)
             {
-                Vector3 targetPosition = new Vector3(player.position.x, transform.position.y, player.position.z);
-                transform.LookAt(targetPosition);
+                transform.LookAt(player);
             }
         }
     }

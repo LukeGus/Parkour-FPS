@@ -16,7 +16,7 @@ MonoBehaviour:
   _name: Burst Rifle
   pickUpGraphics: {fileID: 2092819957812016947, guid: c3f31b2ebdc05184199c4998bfd6aa69, type: 3}
   icon: {fileID: 21300000, guid: 212058b1098889345a9e0ed05e90ca2b, type: 3}
-  shootStyle: 0
+  shootStyle: 3
   shootMethod: 1
   holdProgressSpeed: 0
   reloadStyle: 0

@@ -1,8 +1,10 @@
+using FishNet.Managing;
+using FishNet.Object;
 using UnityEngine;
 
 namespace cowsins
 {
-    public class ExperienceManager : MonoBehaviour
+    public class ExperienceManager : NetworkBehaviour
     {
         // Singleton pattern to ensure that there is only one ExperienceManager instance in the game.
         public static ExperienceManager instance;
@@ -14,8 +16,22 @@ namespace cowsins
 
         private void OnEnable()
         {
-            // If there is no existing ExperienceManager instance, then set this instance as the singleton.
-            if (instance == null) instance = this;
+            Invoke("SetInstance", 1);
+        }
+
+        private void SetInstance()
+        {
+#if !UNITY_SERVER
+            if (instance == null && NetworkDisabler.Instance.isOwner)
+            {
+                instance = this;
+            }
+# else
+            if (instance == null)
+            {
+                instance = this;
+            }
+#endif
         }
 
         // add experience to the player.

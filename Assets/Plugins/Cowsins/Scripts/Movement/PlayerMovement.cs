@@ -682,7 +682,7 @@ namespace cowsins
             if (usesStamina) stamina -= staminaLossOnJump;
 
 
-            SoundManager.Instance.PlaySound(sounds.jumpSFX, 0, 0, false, 0);
+            if(SoundManager.Instance != null) SoundManager.Instance.PlaySound(sounds.jumpSFX, 0, 0, false, 0);
             Invoke(nameof(ResetJump), jumpCooldown);
         }
 
@@ -844,7 +844,7 @@ namespace cowsins
                     if (!grounded)
                     {
 
-                        SoundManager.Instance.PlaySound(sounds.landSFX, 0, 0, false, 0);
+                        if(SoundManager.Instance != null) SoundManager.Instance.PlaySound(sounds.landSFX, 0, 0, false, 0);
                         events.OnLand.Invoke(); // We have just landed
                         jumpCount = maxJumps; // Reset jumps left
                         hasJumped = false;

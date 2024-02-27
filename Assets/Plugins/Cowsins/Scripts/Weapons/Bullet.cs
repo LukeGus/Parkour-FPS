@@ -1,36 +1,48 @@
 /// <summary>
-/// This script belongs to cowsins™ as a part of the cowsins´ FPS Engine. All rights reserved. 
+/// This script belongs to cowsinsï¿½ as a part of the cowsinsï¿½ FPS Engine. All rights reserved. 
 /// </summary>
 using UnityEngine;
+using FishNet.Object;
+using FishNet.Object.Synchronizing;
+
 namespace cowsins
 {
-    public class Bullet : MonoBehaviour
+    public class Bullet : NetworkBehaviour
     {
-        [HideInInspector] public float speed, damage;
+        [HideInInspector] [SyncVar] public float speed, damage;
 
-        [HideInInspector] public Vector3 destination;
+        [HideInInspector] [SyncVar] public Vector3 destination;
 
-        [HideInInspector] public bool gravity;
+        [HideInInspector] [SyncVar] public bool gravity;
 
-        [HideInInspector] public Transform player;
+        [HideInInspector] [SyncVar] public Transform player;
 
-        [HideInInspector] public bool hurtsPlayer;
+        [HideInInspector] [SyncVar] public bool hurtsPlayer;
 
-        [HideInInspector] public bool explosionOnHit;
+        [HideInInspector] [SyncVar] public bool explosionOnHit;
 
-        [HideInInspector] public GameObject explosionVFX;
+        [HideInInspector] [SyncVar] public GameObject explosionVFX;
 
-        [HideInInspector] public float explosionRadius, explosionForce;
+        [HideInInspector] [SyncVar] public float explosionRadius, explosionForce;
 
-        [HideInInspector] public float criticalMultiplier;
+        [HideInInspector] [SyncVar] public float criticalMultiplier;
 
-        [HideInInspector] public float duration;
+        [HideInInspector] [SyncVar] public float duration;
 
         private void Start()
         {
             transform.LookAt(destination);
             Invoke("DestroyProjectile", duration);
+
+            Invoke("Spawn", 0.1f);
         }
+        
+        private void Spawn()
+        {
+            ServerManager.Spawn(gameObject);
+            Debug.Log("Spawned");
+        }
+        
         private void Update() => transform.Translate(0.0f, 0.0f, speed * Time.deltaTime);
 
         private bool projectileHasAlreadyHit = false; // Prevent from double hitting issues
@@ -72,6 +84,7 @@ namespace cowsins
                 {
                     Vector3 contact = GetComponent<Collider>().ClosestPoint(transform.position);
                     GameObject impact = Instantiate(explosionVFX, contact, Quaternion.identity);
+                    ServerManager.Spawn(impact);
                     impact.transform.rotation = Quaternion.LookRotation(player.position);
                 }
                 Collider[] cols = Physics.OverlapSphere(transform.position, explosionRadius);
@@ -105,7 +118,8 @@ namespace cowsins
                     }
                 }
             }
-            Destroy(this.gameObject);
+
+            ServerManager.Despawn(gameObject);
         }
     }
 }

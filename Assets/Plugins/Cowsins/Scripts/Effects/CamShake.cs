@@ -1,10 +1,11 @@
 /// <summary>
-/// This script belongs to cowsins™ as a part of the cowsins´ FPS Engine. All rights reserved. 
+/// This script belongs to cowsinsï¿½ as a part of the cowsinsï¿½ FPS Engine. All rights reserved. 
 /// </summary>
 using UnityEngine;
+using FishNet.Object;
 namespace cowsins
 {
-    public class CamShake : MonoBehaviour
+    public class CamShake : NetworkBehaviour
     {
         #region variables
 
@@ -26,7 +27,25 @@ namespace cowsins
 
         #region methods
 
-        private void Awake() => _instance = this;
+        private void Awake()
+        {
+            Invoke("SetInstance", 1);
+        }
+
+        private void SetInstance()
+        {
+#if !UNITY_SERVER
+            if (_instance == null && NetworkDisabler.Instance.isOwner)
+            {
+                _instance = this;
+            }
+# else
+            if (_instance == null)
+            {
+                _instance = this;
+            }
+#endif
+        }
 
         private float GetFloat(float seed) { return (Mathf.PerlinNoise(seed, timeCounter) - 0.5f) * 2f; }
 
