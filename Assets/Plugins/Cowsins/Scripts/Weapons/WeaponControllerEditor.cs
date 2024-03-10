@@ -52,6 +52,7 @@ namespace cowsins
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("weaponHolder"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("uiController"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("eventManager"));
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("projectileManager"));
                         break;
                     case "Variables":
                         EditorGUILayout.Space(10f);

@@ -37,6 +37,8 @@ namespace cowsins
         [SerializeField] private float smoothTiltAmount = 12f;
 
         private WeaponController player;
+        
+        private GameObject playerGO;
 
         private Vector3 initialPosition;
 
@@ -70,7 +72,11 @@ namespace cowsins
             {
                 initialPosition = transform.localPosition;
                 initialRotation = transform.localRotation;
-                player = GameObject.FindGameObjectWithTag("Player").GetComponent<WeaponController>();
+                playerGO = GameObject.FindGameObjectWithTag("LocalPlayer");
+                if(playerGO != null)
+                {
+                    player = playerGO.GetComponentInChildren<WeaponController>();
+                }
                 sway = SimpleSway;
             }
             else
@@ -90,7 +96,6 @@ namespace cowsins
                 if (playerObject != null)
                 {
                     player = playerObject.GetComponentInChildren<WeaponController>();
-                    Debug.Log(player);
                 }
             }
             

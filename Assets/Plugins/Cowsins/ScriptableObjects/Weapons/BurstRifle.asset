@@ -16,22 +16,22 @@ MonoBehaviour:
   _name: Burst Rifle
   pickUpGraphics: {fileID: 2092819957812016947, guid: c3f31b2ebdc05184199c4998bfd6aa69, type: 3}
   icon: {fileID: 21300000, guid: 212058b1098889345a9e0ed05e90ca2b, type: 3}
-  shootStyle: 3
+  shootStyle: 1
   shootMethod: 1
   holdProgressSpeed: 0
   reloadStyle: 0
-  projectile: {fileID: 1524923703965971472, guid: 0c78e1b153c7edc4381fa619064969b4, type: 3}
+  projectile: {fileID: 7016063973770160725, guid: 7ab16eccb26a1be49ac3924a97aef207, type: 3}
   projectileUsesGravity: 0
   shootDelay: 0
-  bulletDuration: 0
+  bulletDuration: 10
   speed: 40
   explosionOnHit: 0
   hurtsPlayer: 0
   explosionRadius: 0
   explosionForce: 0
-  explosionVFX: {fileID: 0}
+  explosionVFX: {fileID: 2641021470210856975, guid: cfba646c96472874f95964c9c17b7365, type: 3}
   continuousFire: 0
-  fireRate: 0.8
+  fireRate: 1
   reloadTime: 3.5
   coolSpeed: 0
   cooledPercentageAfterOverheat: 0
@@ -40,7 +40,7 @@ MonoBehaviour:
   bulletsPerFire: 3
   ammoCostPerFire: 3
   bulletRange: 100
-  timeBetweenShots: 0.1
+  timeBetweenShots: 5
   penetrationAmount: 10
   penetrationDamageReduction: 0.579
   allowAim: 1
@@ -55,7 +55,7 @@ MonoBehaviour:
   crosshairPreset: {fileID: 2655988077585873504, guid: c578889a819b05c4aacc11a6abb692ac, type: 2}
   applyBulletSpread: 1
   applyWeight: 1
-  spreadAmount: 0.03
+  spreadAmount: 0
   aimSpreadAmount: 0
   weightMultiplier: 1
   applyRecoil: 1

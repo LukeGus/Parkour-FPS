@@ -84,7 +84,7 @@ namespace cowsins
 
         [Tooltip("The way the weapon reloads. Set it now for future updates")] public ReloadingStyle reloadStyle;
 
-        [Tooltip("Your bullet objects")] public Bullet projectile;
+        [Tooltip("Your bullet objects")] public GameObject projectile;
 
         [Tooltip(" While true, the bullet will draw a parabola. ")] public bool projectileUsesGravity;
 
@@ -303,6 +303,7 @@ namespace cowsins
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("_name"));
                         EditorGUILayout.LabelField("This represents your first-person weapon in the game.", EditorStyles.helpBox);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("weaponObject"));
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("projectile"));
                         EditorGUILayout.LabelField("This represents the graphics of your weapon on the ground.", EditorStyles.helpBox);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("pickUpGraphics"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("icon"));
@@ -348,14 +349,10 @@ namespace cowsins
                                 break;
                             case 1:
                                 EditorGUI.indentLevel++;
-                                EditorGUILayout.PrefixLabel("Attach your Projectile here", EditorStyles.helpBox);
-                                EditorGUILayout.PropertyField(serializedObject.FindProperty("projectile"));
-                                EditorGUILayout.PropertyField(serializedObject.FindProperty("projectileUsesGravity"));
                                 EditorGUILayout.PropertyField(serializedObject.FindProperty("speed"));
                                 if (myScript.shootDelay > myScript.fireRate) myScript.shootDelay = myScript.fireRate;
                                 EditorGUILayout.PropertyField(serializedObject.FindProperty("shootDelay"));
                                 EditorGUILayout.PropertyField(serializedObject.FindProperty("bulletDuration"));
-                                EditorGUILayout.PropertyField(serializedObject.FindProperty("hurtsPlayer"));
                                 EditorGUILayout.PropertyField(serializedObject.FindProperty("explosionOnHit"));
                                 if (myScript.explosionOnHit)
                                 {
@@ -566,11 +563,7 @@ namespace cowsins
                 EditorGUILayout.PropertyField(fireRateProperty);
                 EditorGUI.indentLevel--;
             }
-
-
-
-            var bulletRangeProperty = serializedObject.FindProperty("bulletRange");
-            EditorGUILayout.PropertyField(bulletRangeProperty);
+            
 
             var bulletsPerFireProperty = serializedObject.FindProperty("bulletsPerFire");
             EditorGUILayout.PropertyField(bulletsPerFireProperty);
@@ -788,18 +781,7 @@ namespace cowsins
             EditorGUILayout.PropertyField(showBulletShellsProperty);
 
             if (myScript.bulletsPerFire == 1) myScript.timeBetweenShots = 0;
-
-            using (var group = new EditorGUILayout.FadeGroupScope(Convert.ToSingle(myScript.showBulletShells)))
-            {
-
-                if (group.visible == true)
-                {
-                    EditorGUI.indentLevel++;
-                    var bulletGraphicsProperty = serializedObject.FindProperty("bulletGraphics");
-                    EditorGUILayout.PropertyField(bulletGraphicsProperty);
-                    EditorGUI.indentLevel--;
-                }
-            }
+            
             if (myScript.explosionOnHit && myScript.shootStyle == ShootStyle.Projectile)
             {
                 EditorGUI.indentLevel++;

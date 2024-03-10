@@ -1,5 +1,5 @@
 /// <summary>
-/// This script belongs to cowsins™ as a part of the cowsins´ FPS Engine. All rights reserved. 
+/// This script belongs to cowsinsï¿½ as a part of the cowsinsï¿½ FPS Engine. All rights reserved. 
 /// </summary>
 using UnityEngine;
 namespace cowsins
@@ -26,8 +26,8 @@ namespace cowsins
 
         void Start()
         {
-            player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
-            wp = GameObject.FindGameObjectWithTag("Player").GetComponent<WeaponController>();
+            player = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponentInChildren<PlayerMovement>();
+            wp = GameObject.FindGameObjectWithTag("LocalPlayer").GetComponentInChildren<WeaponController>();
             origRot = transform.localRotation;
             origPos = transform.localPosition;
         }

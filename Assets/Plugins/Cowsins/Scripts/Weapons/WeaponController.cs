@@ -2,6 +2,7 @@
 /// This script belongs to cowsins™ as a part of the cowsins´ FPS Engine. All rights reserved. 
 /// </summary>
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using cowsins;
@@ -110,6 +111,8 @@ namespace cowsins
         public CustomShotMethods[] customShot;
 
         public UnityEvent customMethod;
+        
+        public ProjectileManager projectileManager;
         
         [SerializeField] private UIController uiController;
 
@@ -256,16 +259,12 @@ namespace cowsins
 
         public void CustomShot()
         {
-            // If we want to use fire Rate
-            if (!weapon.continuousFire)
-            {
-                canShoot = false;
-                Invoke(nameof(CanShoot), fireRate);
-            }
-
-            // Continuous fire
+            canShoot = false;
+            Invoke(nameof(CanShoot), fireRate);
+            
             customMethod?.Invoke();
         }
+        
         private void SelectCustomShotMethod()
         {
             // Iterate through each item in the array
@@ -334,7 +333,6 @@ namespace cowsins
                 else if (style == 1)
                 {
                     yield return new WaitForSeconds(weapon.shootDelay);
-                    Debug.Log("Projectile Shot");
                     ProjectileShot();
                 }
 
@@ -408,40 +406,15 @@ namespace cowsins
 
             Destroy(trail.gameObject, trail.time);
         }
+        
         /// <summary>
         /// projectile shooting spawns a projectile
-        /// Add a rigidbody to your bullet gameObject to make a curved trajectory
-        /// This method is pretty much always used for grenades, rocket lFaunchers and grenade launchers.
         /// </summary>
         private void ProjectileShot()
         {
-            events.OnShoot.Invoke();
-            if (resizeCrosshair && uiController.crosshair != null) uiController.crosshair.Resize(weapon.crosshairResize * 100);
-            
-            Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
-            Vector3 destination = (Physics.Raycast(ray, out hit) ? destination = hit.point + CowsinsUtilities.GetSpreadDirection(weapon.spreadAmount, mainCamera) : destination = ray.GetPoint(50f) + CowsinsUtilities.GetSpreadDirection(weapon.spreadAmount, mainCamera));
-
-            foreach (var p in firePoint)
-            {
-                GameObject bulletObject = Instantiate(weapon.projectile.gameObject, p.position, p.transform.rotation);
-                Bullet bulletScript = bulletObject.AddComponent<Bullet>();
-
-                if (weapon.explosionOnHit) bulletScript.explosionVFX = weapon.explosionVFX;
-
-                bulletScript.hurtsPlayer = weapon.hurtsPlayer;
-                bulletScript.explosionOnHit = weapon.explosionOnHit;
-                bulletScript.explosionRadius = weapon.explosionRadius;
-                bulletScript.explosionForce = weapon.explosionForce;
-
-                bulletScript.criticalMultiplier = weapon.criticalDamageMultiplier;
-                bulletScript.destination = destination;
-                bulletScript.player = this.transform;
-                bulletScript.speed = weapon.speed;
-                bulletScript.GetComponent<Rigidbody>().isKinematic = (!weapon.projectileUsesGravity) ? true : false;
-                bulletScript.damage = damagePerBullet * stats.damageMultiplier;
-                bulletScript.duration = weapon.bulletDuration;
-            }
+            projectileManager.Shoot();
         }
+        
         /// <summary>
         /// Moreover, cowsins´ FPS ENGINE also supports melee attacking
         /// Use this for Swords, knives etc

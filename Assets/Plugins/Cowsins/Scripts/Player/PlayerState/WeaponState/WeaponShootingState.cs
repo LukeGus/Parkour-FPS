@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace cowsins
 {
     public class WeaponShootingState : WeaponBaseState
@@ -11,7 +13,6 @@ namespace cowsins
 
         public override void EnterState()
         {
-
             controller = _ctx.GetComponent<WeaponController>();
             stats = _ctx.GetComponent<PlayerStats>();
         }

@@ -7,8 +7,7 @@ namespace cowsins
     public class NetworkDisabler : NetworkBehaviour
     {
         public static NetworkDisabler Instance;
-
-        public PlayerMovement playerMovement;
+        
         public UIController uiController;
         public InteractManager interactManager;
         public GameObject playerGraphics;
@@ -52,11 +51,11 @@ namespace cowsins
         {
             if (IsOwner) isOwner = true;
             else isOwner = false;
-
-            playerMovement.enabled = IsOwner;
+            
             interactManager.enabled = IsOwner;
             weaponCamera.enabled = IsOwner;
             
+            player.SetActive(IsOwner);
             uiController.gameObject.SetActive(IsOwner);
             cameraGO.gameObject.SetActive(IsOwner);
             playerGraphics.SetActive(!IsOwner);

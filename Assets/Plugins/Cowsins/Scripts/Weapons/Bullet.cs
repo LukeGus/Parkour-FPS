@@ -5,6 +5,7 @@ using UnityEngine;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 
+
 namespace cowsins
 {
     public class Bullet : NetworkBehaviour
@@ -119,7 +120,7 @@ namespace cowsins
                 }
             }
 
-            ServerManager.Despawn(gameObject);
+            NetworkObject.Despawn(gameObject);
         }
     }
 }
