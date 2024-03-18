@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using FishNet.Object;
 
 namespace cowsins
 {

@@ -6,8 +6,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using cowsins;
-using FishNet;
-using FishNet.Managing.Server;
 #if UNITY_EDITOR
 using UnityEditor.Presets;
 #endif
@@ -293,12 +291,12 @@ namespace cowsins
             {
                 foreach (var p in firePoint)
                 {
-                    var bulletShell = Instantiate(weapon.bulletGraphics, p.position, mainCamera.transform.rotation);
-                    Rigidbody shellRigidbody = bulletShell.GetComponent<Rigidbody>();
-                    float torque = Random.Range(-15f, 15f);
-                    Vector3 shellForce = mainCamera.transform.right * 5 + mainCamera.transform.up * 5;
-                    shellRigidbody.AddTorque(mainCamera.transform.right * torque, ForceMode.Impulse);
-                    shellRigidbody.AddForce(shellForce, ForceMode.Impulse);
+                    //var bulletShell = Instantiate(weapon.bulletGraphics, p.position, mainCamera.transform.rotation);
+                    //Rigidbody shellRigidbody = bulletShell.GetComponent<Rigidbody>();
+                    //float torque = Random.Range(-15f, 15f);
+                    //Vector3 shellForce = mainCamera.transform.right * 5 + mainCamera.transform.up * 5;
+                    //shellRigidbody.AddTorque(mainCamera.transform.right * torque, ForceMode.Impulse);
+                    //shellRigidbody.AddForce(shellForce, ForceMode.Impulse);
                 }
             }
             // Rest the bullets that have just been shot
@@ -333,7 +331,7 @@ namespace cowsins
                 else if (style == 1)
                 {
                     yield return new WaitForSeconds(weapon.shootDelay);
-                    ProjectileShot();
+                    projectileManager.ShootProjectile();
                 }
 
                 yield return new WaitForSeconds(weapon.timeBetweenShots);
@@ -412,7 +410,7 @@ namespace cowsins
         /// </summary>
         private void ProjectileShot()
         {
-            projectileManager.Shoot();
+            
         }
         
         /// <summary>
@@ -490,38 +488,28 @@ namespace cowsins
                 case int l when l == LayerMask.NameToLayer("Grass"):
                     impact = Instantiate(effects.grassImpact, h.point, Quaternion.identity); // Grass
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
-                    InstanceFinder.ServerManager.Spawn(impact);
                     if (weapon != null)
                         impactBullet = Instantiate(weapon.bulletHoleImpact.grassImpact, h.point, Quaternion.identity);
-                        InstanceFinder.ServerManager.Spawn(impact);
                     break;
                 case int l when l == LayerMask.NameToLayer("Metal"):
                     impact = Instantiate(effects.metalImpact, h.point, Quaternion.identity); // Metal
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
-                    InstanceFinder.ServerManager.Spawn(impact);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.metalImpact, h.point, Quaternion.identity);
-                    InstanceFinder.ServerManager.Spawn(impactBullet);
                     break;
                 case int l when l == LayerMask.NameToLayer("Mud"):
                     impact = Instantiate(effects.mudImpact, h.point, Quaternion.identity); // Mud
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
-                    InstanceFinder.ServerManager.Spawn(impact);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.mudImpact, h.point, Quaternion.identity);
-                    InstanceFinder.ServerManager.Spawn(impactBullet);
                     break;
                 case int l when l == LayerMask.NameToLayer("Wood"):
                     impact = Instantiate(effects.woodImpact, h.point, Quaternion.identity); // Wood
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
-                    InstanceFinder.ServerManager.Spawn(impact);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.woodImpact, h.point, Quaternion.identity);
-                    InstanceFinder.ServerManager.Spawn(impactBullet);
                     break;
                 case int l when l == LayerMask.NameToLayer("Player"):
                     impact = Instantiate(effects.enemyImpact, h.point, Quaternion.identity); // Enemy
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
-                    InstanceFinder.ServerManager.Spawn(impact);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.enemyImpact, h.point, Quaternion.identity);
-                    InstanceFinder.ServerManager.Spawn(impactBullet);
                     break;
             }
 

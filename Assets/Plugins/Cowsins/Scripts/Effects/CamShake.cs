@@ -1,8 +1,8 @@
 /// <summary>
 /// This script belongs to cowsins� as a part of the cowsins� FPS Engine. All rights reserved. 
 /// </summary>
-using UnityEngine;
 using FishNet.Object;
+using UnityEngine;
 namespace cowsins
 {
     public class CamShake : NetworkBehaviour

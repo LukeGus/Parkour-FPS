@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
+using FishNet.Object;
 using UnityEngine.UI;
 using TMPro;
-using FishNet.Object;
+
 namespace cowsins
 {
     public class Compass : NetworkBehaviour

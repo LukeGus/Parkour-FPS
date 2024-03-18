@@ -1,47 +1,38 @@
 /// <summary>
 /// This script belongs to cowsins� as a part of the cowsins� FPS Engine. All rights reserved. 
 /// </summary>
-using UnityEngine;
-using FishNet.Object;
-using FishNet.Object.Synchronizing;
 
+using FishNet.Object;
+using UnityEngine;
 
 namespace cowsins
 {
     public class Bullet : NetworkBehaviour
     {
-        [HideInInspector] [SyncVar] public float speed, damage;
+        [HideInInspector] public float speed, damage;
 
-        [HideInInspector] [SyncVar] public Vector3 destination;
+        [HideInInspector] public Vector3 destination;
 
-        [HideInInspector] [SyncVar] public bool gravity;
+        [HideInInspector] public bool gravity;
 
-        [HideInInspector] [SyncVar] public Transform player;
+        [HideInInspector] public Transform player;
 
-        [HideInInspector] [SyncVar] public bool hurtsPlayer;
+        [HideInInspector] public bool hurtsPlayer;
 
-        [HideInInspector] [SyncVar] public bool explosionOnHit;
+        [HideInInspector] public bool explosionOnHit;
 
-        [HideInInspector] [SyncVar] public GameObject explosionVFX;
+        [HideInInspector] public GameObject explosionVFX;
 
-        [HideInInspector] [SyncVar] public float explosionRadius, explosionForce;
+        [HideInInspector] public float explosionRadius, explosionForce;
 
-        [HideInInspector] [SyncVar] public float criticalMultiplier;
+        [HideInInspector] public float criticalMultiplier;
 
-        [HideInInspector] [SyncVar] public float duration;
+        [HideInInspector] public float duration;
 
         private void Start()
         {
             transform.LookAt(destination);
             Invoke("DestroyProjectile", duration);
-
-            Invoke("Spawn", 0.1f);
-        }
-        
-        private void Spawn()
-        {
-            ServerManager.Spawn(gameObject);
-            Debug.Log("Spawned");
         }
         
         private void Update() => transform.Translate(0.0f, 0.0f, speed * Time.deltaTime);
@@ -85,7 +76,6 @@ namespace cowsins
                 {
                     Vector3 contact = GetComponent<Collider>().ClosestPoint(transform.position);
                     GameObject impact = Instantiate(explosionVFX, contact, Quaternion.identity);
-                    ServerManager.Spawn(impact);
                     impact.transform.rotation = Quaternion.LookRotation(player.position);
                 }
                 Collider[] cols = Physics.OverlapSphere(transform.position, explosionRadius);
@@ -111,7 +101,7 @@ namespace cowsins
                     }
                     if (playerMovement != null)
                     {
-                        CamShake.instance.ExplosionShake(Vector3.Distance(CamShake.instance.gameObject.transform.position, transform.position));
+                        //CamShake.instance.ExplosionShake(Vector3.Distance(CamShake.instance.gameObject.transform.position, transform.position));
                     }
                     if (rigidbody != null && c != this)
                     {

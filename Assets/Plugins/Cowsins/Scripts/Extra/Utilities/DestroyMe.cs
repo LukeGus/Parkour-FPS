@@ -2,9 +2,10 @@
 /// This script belongs to cowsins� as a part of the cowsins� FPS Engine. All rights reserved. 
 /// </summary>
 
-using FishNet.Object;
 using FishNet;
+using FishNet.Object;
 using UnityEngine;
+
 namespace cowsins
 {
     public class DestroyMe : NetworkBehaviour

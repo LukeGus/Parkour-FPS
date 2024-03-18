@@ -4,12 +4,10 @@
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+using FishNet.Object;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using FishNet.Object;
-using FishNet.Object.Synchronizing;
-using FishNet;
 using UnityEngine.Events;
 
 namespace cowsins
@@ -21,15 +19,15 @@ namespace cowsins
     public class EnemyHealth : NetworkBehaviour, IDamageable
     {
 
-        [Tooltip("Name of the enemy. This will appear on the killfeed"), SerializeField] [SyncVar]
+        [Tooltip("Name of the enemy. This will appear on the killfeed"), SerializeField]
         protected string _name;
 
-        [SyncVar] protected float health;
-        [Tooltip("initial enemy health "), SerializeField] [SyncVar]
+        protected float health;
+        [Tooltip("initial enemy health "), SerializeField]
         protected float maxHealth;
 
-        [SyncVar] protected float shield;
-        [Tooltip("initial enemy shield"), SerializeField] [SyncVar]
+        protected float shield;
+        [Tooltip("initial enemy shield"), SerializeField]
         protected float maxShield;
 
         [Tooltip("When the object dies, decide if it should be destroyed or not.")] public bool destroyOnDie;

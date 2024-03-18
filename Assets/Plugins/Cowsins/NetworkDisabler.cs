@@ -1,6 +1,6 @@
 using UnityEngine;
-using FishNet.Object;
 using cowsins;
+using FishNet.Object;
 
 namespace cowsins
 {
@@ -10,6 +10,11 @@ namespace cowsins
         
         public UIController uiController;
         public InteractManager interactManager;
+        public PlayerMovement playerMovement;
+        public WeaponController weaponController;
+        public PlayerStates playerStates;
+        public WeaponStates weaponStates;
+        public WeaponAnimator weaponAnimator;
         public GameObject playerGraphics;
         public GameObject player;
         public GameObject cameraGO;
@@ -54,8 +59,12 @@ namespace cowsins
             
             interactManager.enabled = IsOwner;
             weaponCamera.enabled = IsOwner;
+            playerMovement.enabled = IsOwner;
+            weaponController.enabled = IsOwner;
+            playerStates.enabled = IsOwner;
+            weaponStates.enabled = IsOwner;
+            weaponAnimator.enabled = IsOwner;
             
-            player.SetActive(IsOwner);
             uiController.gameObject.SetActive(IsOwner);
             cameraGO.gameObject.SetActive(IsOwner);
             playerGraphics.SetActive(!IsOwner);

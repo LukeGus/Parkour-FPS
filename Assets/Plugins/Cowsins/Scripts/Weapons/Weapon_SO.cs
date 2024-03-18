@@ -84,7 +84,9 @@ namespace cowsins
 
         [Tooltip("The way the weapon reloads. Set it now for future updates")] public ReloadingStyle reloadStyle;
 
-        [Tooltip("Your bullet objects")] public GameObject projectile;
+        [Tooltip("Your bullet object")] public GameObject projectile;
+        
+        [Tooltip("The name of the type of bullet spawned when shot")] public string projectileType;
 
         [Tooltip(" While true, the bullet will draw a parabola. ")] public bool projectileUsesGravity;
 
@@ -303,7 +305,7 @@ namespace cowsins
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("_name"));
                         EditorGUILayout.LabelField("This represents your first-person weapon in the game.", EditorStyles.helpBox);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("weaponObject"));
-                        EditorGUILayout.PropertyField(serializedObject.FindProperty("projectile"));
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("projectileType"));
                         EditorGUILayout.LabelField("This represents the graphics of your weapon on the ground.", EditorStyles.helpBox);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("pickUpGraphics"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("icon"));
@@ -814,7 +816,6 @@ namespace cowsins
                 { "icon [Basic Tab]", script.icon == null },
                 { "projectile [Shooting Tab]", script.shootStyle == ShootStyle.Projectile && script.projectile == null },
                 { "proceduralShotPattern [Visuals Tab]", script.useProceduralShot && script.proceduralShotPattern == null },
-                { "bulletGraphics [Visuals Tab]", script.showBulletShells && script.bulletGraphics == null },
                 { "firingSFX [Audio Tab]", script.audioSFX.firing == null },
                 { "holsterSFX [Audio Tab]", script.audioSFX.holster == null },
                 { "unholsterSFX [Audio Tab]", script.audioSFX.unholster == null },

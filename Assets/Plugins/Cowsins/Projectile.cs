@@ -1,47 +1,66 @@
 using System.Collections;
 using System.Collections.Generic;
 using cowsins;
-using FishNet;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
+using FishNet;
+using FishNet.Transporting;
+using QFSW.QC.Actions;
 using UnityEngine;
 
 namespace cowsins
 {
     public class Projectile : NetworkBehaviour
     {
-        [SyncVar] public float projectileDamage;
+        [SyncVar(Channel = Channel.Reliable, ReadPermissions = ReadPermission.Observers, WritePermissions = WritePermission.ServerOnly)] public float projectileDamage;
+        [SyncVar(Channel = Channel.Reliable, ReadPermissions = ReadPermission.Observers, WritePermissions = WritePermission.ServerOnly)] public float bulletLife;
+        [SyncVar(Channel = Channel.Reliable, ReadPermissions = ReadPermission.Observers, WritePermissions = WritePermission.ServerOnly)] public float speed;
+        [SyncVar(Channel = Channel.Reliable, ReadPermissions = ReadPermission.Observers, WritePermissions = WritePermission.ServerOnly)] public Vector3 dir;
+    
+        private Rigidbody rb;
 
-        [SyncVar] public float bulletLife;
-
-        private void OnEnable()
+        private void Start()
         {
             StartCoroutine(DisableAfterDelay(bulletLife));
 
-            Debug.Log("5");
+            rb = GetComponent<Rigidbody>();
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnTriggerEnter(Collider collision)
         {
-            if (collision.gameObject.CompareTag("RemotePlayer")) ;
+            if (collision.gameObject.CompareTag("RemotePlayer"))
             {
-                collision.gameObject.GetComponent<HealthManager>().TakeDamage(projectileDamage);
+                collision.gameObject.GetComponent<HealthManager>().TakeDamageServerRpc(projectileDamage);
+                
+                Debug.Log("Player Hit");
+                DespawnProjectileServerRpc();
             }
         }
 
         private IEnumerator DisableAfterDelay(float delay)
         {
+            if(bulletLife == 0)
+                yield return new WaitForSeconds(1);
+            
             yield return new WaitForSeconds(delay);
 
-            // if network object exists, despawn it
-            if (this.NetworkObject != null)
-            {
-                InstanceFinder.ServerManager.Spawn(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+            DespawnProjectileServerRpc();
+        }
+
+        void FixedUpdate()
+        {
+            Propel();
+        }
+
+        void Propel()
+        {
+            rb.AddForce(dir * speed, ForceMode.Force);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void DespawnProjectileServerRpc()
+        {
+            InstanceFinder.ServerManager.Despawn(this.gameObject);
         }
     }
 }
