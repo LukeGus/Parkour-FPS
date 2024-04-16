@@ -4,39 +4,34 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Ledge
   - Enemy
-  - FirePoint
   - Critical
-  - Weapons
-  - Ramp
-  - BodyShot
-  - ActivateTrigger
-  - PlayerTrigger
-  - Vaultable_1m
-  - Vaultable_2m
-  - Vaultable
+  - Ladder
+  - Laser Line
   - LocalPlayer
   - RemotePlayer
+  - Projectile
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Ground
+  - Hide
   - Water
   - UI
+  - Ground
+  - Wall
+  - Ledge
+  - DoNotPostProcess
   - Weapons
-  - Enemy
-  - Object
-  - Interactable
-  - Grass
-  - Metal
-  - Mud
-  - Wood
-  - UITop
-  - PostProcessing
-  - Effects
-  - Socket
-  - Player
+  - Projectile
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 

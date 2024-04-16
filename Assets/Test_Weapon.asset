@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 479d5d781867d574d8f08cda3a3e07ae, type: 3}
+  m_Name: Test_Weapon
+  m_EditorClassIdentifier: 
+  weaponPrefab: {fileID: 2935486226234462751, guid: 5b563b8123908a04ab3c3aa31c9f18ca, type: 3}
+  projectile: {fileID: 11400000, guid: 28a80043721d48d4a978ad4f514b9391, type: 2}
+  fireRate: 0.2
+  reloadTime: 1
+  timeBetweenShots: 1
+  shotsPerFire: 1
+  maxAmmo: 30
+  recoilX: -2
+  recoilY: 0.5
+  recoilZ: 0.5
+  bulletSpread: 1.5
+  muzzleFlash: {fileID: 5823317807300183299, guid: 2fa4d151926efeb49bd37aa0904033b1, type: 3}
+  fireSound: {fileID: 0}
+  reloadSound: {fileID: 0}
+  aimSound: {fileID: 0}

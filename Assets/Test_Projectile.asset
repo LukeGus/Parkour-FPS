@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a782bbe1a73be24b857393bf15c50ef, type: 3}
+  m_Name: Test_Projectile
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 8721037816917489341, guid: c244805cc12f7984ebe1203437dcd7f1, type: 3}
+  bulletHolePrefab: {fileID: 6906446144601021256, guid: 02019df397cb35048bb7c18171c47c68, type: 3}
+  damage: 10
+  damageRange: 5
+  speed: 250
+  lifeTime: 10
+  useGravity: 0
+  naturalSound: {fileID: 0}
+  hitSound: {fileID: 0}
